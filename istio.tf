@@ -1,10 +1,12 @@
 resource "kubernetes_namespace" "istio_system" {
+  count      = "${var.enable_istio == "true" ? 1 : 0}"
   metadata {
     name = "istio-system"
   }
 }
 
 data "helm_repository" "istio_repo" {
+  count      = "${var.enable_istio == "true" ? 1 : 0}"
   name = "istio.io"
   url  = "https://storage.googleapis.com/istio-release/releases/${var.istio_helm_release_version}/charts/"
 }

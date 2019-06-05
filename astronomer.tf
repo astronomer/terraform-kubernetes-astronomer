@@ -23,7 +23,7 @@ resource "kubernetes_secret" "astronomer_bootstrap" {
   type = "kubernetes.io/generic"
 
   data {
-    "connection" = "${file("/opt/db_password/connection_string")}"
+    "connection" = "${var.db_connection_string}"
   }
 }
 
@@ -38,41 +38,25 @@ resource "kubernetes_secret" "astronomer_tls" {
   type = "kubernetes.io/tls"
 
   data {
-    "tls.crt" = "${file("/opt/tls_secrets/tls.crt")}"
-    "tls.key" = "${file("/opt/tls_secrets/tls.key")}"
+    "tls.crt" = "${var.tls_cert}"
+    "tls.key" = "${var.tls_key}"
   }
 }
 
-# TODO
-# Cloning the repository from github, is not the best way
-# to do this. We should use helm repository directly
-
-resource "null_resource" "helm_repo" {
-  provisioner "local-exec" {
-    command = <<EOF
-    rm -rf '${path.module}/helm.astronomer.io' && \
-    git clone ${var.git_clone_from} && \
-    cd "${path.module}/helm.astronomer.io" && \
-    git checkout ${var.astronomer_version}
-    EOF
-  }
-
-  provisioner "local-exec" {
-    when    = "destroy"
-    command = "rm -rf '${path.module}/helm.astronomer.io'"
-  }
+data "helm_repository" "astronomer_repo" {
+  name = "astronomer"
+  url  = "https://helm.astronomer.io/"
 }
 
 resource "helm_release" "astronomer" {
-  depends_on = ["kubernetes_secret.astronomer_bootstrap",
-    "null_resource.helm_repo",
-    "kubernetes_namespace.astronomer",
-    "helm_release.istio",
-  ]
+  # istio needs to be deployed first
+  depends_on = ["helm_release.istio"]
 
   name      = "astronomer"
-  chart     = "${path.module}/helm.astronomer.io"
-  namespace = "${var.astronomer_namespace}"
+  version   = "${var.astronomer_version}"
+  chart     = "astronomer"
+  repository = "${data.helm_repository.astronomer_repo.name}"
+  namespace = "${kubernetes_namespace.astronomer.metadata.name}"
   wait      = true
 
   values = [<<EOF

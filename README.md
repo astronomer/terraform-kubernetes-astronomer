@@ -1,7 +1,3 @@
-# Astronomer Terraform
+# Astronomer Module
 
-Terraform scripts for the Astronomer Platform.
-
-* [GCP](/gcp)
-* [AWS](/aws)
-* [Azure](/azure)
+- This is a platform-agnostic module to deploy Astronomer on kubernetes
