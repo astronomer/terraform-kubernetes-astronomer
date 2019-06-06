@@ -43,32 +43,68 @@ resource "kubernetes_secret" "astronomer_tls" {
   }
 }
 
+resource "kubernetes_service_account" "tiller" {
+  metadata {
+    name = "tiller"
+    namespace = "kube-system"
+  }
+}
+
+resource "kubernetes_cluster_role_binding" "tiller_admin" {
+  depends_on = ["kubernetes_service_account.tiller"]
+  metadata {
+      name = "tiller"
+  }
+  role_ref {
+      api_group = "rbac.authorization.k8s.io"
+      kind = "ClusterRole"
+      name = "cluster-admin"
+  }
+  subject {
+      kind = "ServiceAccount"
+      name = "tiller"
+      namespace = "kube-system"
+  }
+}
+
 data "helm_repository" "astronomer_repo" {
+  depends_on = ["kubernetes_cluster_role_binding.tiller_admin"]
   name = "astronomer"
   url  = "https://helm.astronomer.io/"
 }
 
 resource "helm_release" "astronomer" {
-  # istio needs to be deployed first
-  depends_on = ["helm_release.istio"]
+  depends_on = ["kubernetes_cluster_role_binding.tiller_admin", "helm_release.istio"]
 
   name      = "astronomer"
   version   = "${var.astronomer_version}"
   chart     = "astronomer"
   repository = "${data.helm_repository.astronomer_repo.name}"
-  namespace = "${kubernetes_namespace.astronomer.metadata.name}"
+  namespace = "${kubernetes_namespace.astronomer.metadata.0.name}"
   wait      = true
 
-  values = [<<EOF
----
-global:
-  baseDomain: ${var.base_domain}
-  tlsSecret: astronomer-tls
-  istioEnabled: ${var.enable_istio == "true" ? true: false}
-nginx:
-  loadBalancerIP: ${var.load_balancer_ip == "" ? "~": var.load_balancer_ip}
-  privateLoadBalancer: ${var.cluster_type == "private" ? true: false}
-  perserveSourceIP: true
-EOF
-  ]
+  set {
+    name  = "global.istioEnabled"
+    value = "${var.enable_istio == "true" ? true: false}"
+  }
+
+  set {
+    name  = "global.baseDomain"
+    value = "${var.base_domain}"
+  }
+
+  set {
+    name  = "nginx.loadBalancerIp"
+    value = "${var.load_balancer_ip == "" ? "~": var.load_balancer_ip}"
+  }
+
+  set {
+    name  = "nginx.privateLoadBalancer"
+    value = "${var.cluster_type == "private" ? true: false}"
+  }
+
+  set {
+    name  = "nginx.perserveSourceIp"
+    value = true
+  }
 }
