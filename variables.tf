@@ -33,7 +33,7 @@ variable "istio_helm_release_version" {
 }
 
 variable "astronomer_version" {
-  default = "v0.9.0"
+  default = "v0.9.1-alpha.5"
   type    = "string"
 }
 
