@@ -19,6 +19,7 @@ resource "helm_release" "istio_init" {
   repository = "${data.helm_repository.istio_repo.name}"
   chart      = "istio-init"
   namespace  = "${kubernetes_namespace.istio_system.metadata.0.name}"
+  wait       = true
 }
 
 resource "helm_release" "istio" {

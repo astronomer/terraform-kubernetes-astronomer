@@ -65,6 +65,9 @@ resource "kubernetes_cluster_role_binding" "tiller_admin" {
       name = "tiller"
       namespace = "kube-system"
   }
+  provisioner "local-exec" {
+    command = "helm init --service-account tiller --upgrade --wait"
+  }
 }
 
 data "helm_repository" "astronomer_repo" {
@@ -107,4 +110,159 @@ resource "helm_release" "astronomer" {
     name  = "nginx.perserveSourceIp"
     value = true
   }
+
+  set {
+    name  = "nginx.perserveSourceIp"
+    value = true
+  }
+  values = [<<EOF
+global:
+  baseDomain: ~
+  tlsSecret: ~
+  acme: false
+  rbacEnabled: true
+  helmRepo: "https://helm.astronomer.io"
+  helmHost: "tiller-deploy.kube-system.svc.cluster.local:44134"
+  singleNamespace: false
+  airflowEnabled: false
+  istioEnabled: false
+tags:
+  platform: true
+  monitoring: true
+  logging: true
+astronomer:
+  orbit:
+    resources:
+      requests:
+        cpu: "100m"
+        memory: "256Mi"
+      limits:
+        cpu: "500m"
+        memory: "1024Mi"
+  houston:
+    resources:
+      requests:
+        cpu: "250m"
+        memory: "512Mi"
+      limits:
+        cpu: "800m"
+        memory: "1024Mi"
+  prisma:
+    resources:
+      requests:
+        cpu: "250m"
+        memory: "512Mi"
+      limits:
+        cpu: "500m"
+        memory: "1024Mi"
+  commander:
+    resources:
+      requests:
+        cpu: "250m"
+        memory: "512Mi"
+      limits:
+        cpu: "500m"
+        memory: "1024Mi"
+  registry:
+    resources:
+      requests:
+        cpu: "250m"
+        memory: "512Mi"
+      limits:
+        cpu: "500m"
+        memory: "1024Mi"
+    persistence:
+      enabled: true
+      size: "100Gi"
+  install:
+    resources:
+      requests:
+        cpu: "100m"
+        memory: "256Mi"
+      limits:
+        cpu: "500m"
+        memory: "1024Mi"
+  kubeReplicator:
+    resources:
+      requests:
+        cpu: "100m"
+        memory: "256Mi"
+      limits:
+        cpu: "500m"
+        memory: "1024Mi"
+nginx:
+  resources:
+    requests:
+      cpu: "500m"
+      memory: "1024Mi"
+    limits:
+      cpu: "1"
+      memory: "2048Mi"
+  loadBalancerIP:
+  loadBalancerSourceRanges:
+grafana:
+  resources:
+    requests:
+      cpu: "250m"
+      memory: "512Mi"
+    limits:
+      cpu: "500m"
+      memory: "1024Mi"
+prometheus:
+  retention: 15d
+  persistence:
+    enabled: true
+    size: "100Gi"
+  resources:
+    requests:
+      cpu: "1000m"
+      memory: "4Gi"
+    limits:
+      cpu: "1000m"
+      memory: "4Gi"
+elasticsearch:
+  common:
+    persistence:
+      enabled: true
+  client:
+    heapMemory: "2g"
+    resources:
+      requests:
+        cpu: "1"
+        memory: "2Gi"
+      limits:
+        cpu: "2"
+        memory: "4Gi"
+  data:
+    heapMemory: "2g"
+    resources:
+      requests:
+        cpu: "1"
+        memory: "2Gi"
+      limits:
+        cpu: "2"
+        memory: "4Gi"
+    persistence:
+      size: "100Gi"
+  master:
+    heapMemory: "2g"
+    resources:
+      requests:
+        cpu: "1"
+        memory: "2Gi"
+      limits:
+        cpu: "2"
+        memory: "4Gi"
+    persistence:
+      size: "20Gi"
+kibana:
+  resources:
+    requests:
+      cpu: "250m"
+      memory: "512Mi"
+    limits:
+      cpu: "500m"
+      memory: "1024Mi"
+EOF
+]
 }
