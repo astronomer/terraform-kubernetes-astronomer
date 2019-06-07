@@ -32,6 +32,11 @@ variable "istio_helm_release_version" {
   type    = "string"
 }
 
+variable "local_umbrella_chart" {
+  default = ""
+  type    = "string"
+}
+
 variable "astronomer_version" {
   default = "v0.9.1-alpha.5"
   type    = "string"

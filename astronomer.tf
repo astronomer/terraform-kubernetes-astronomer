@@ -76,43 +76,26 @@ data "helm_repository" "astronomer_repo" {
   url  = "https://helm.astronomer.io/"
 }
 
-resource "helm_release" "astronomer" {
-  depends_on = ["kubernetes_cluster_role_binding.tiller_admin", "helm_release.istio"]
+# this is for development use
+resource "helm_release" "astronomer_local" {
+  count = "${var.local_umbrella_chart == "" ? 0 : 1}"
+  depends_on = ["kubernetes_cluster_role_binding.tiller_admin","helm_release.istio"]
+  name      = "astronomer"
+  version   = "${var.astronomer_version}"
+  chart     = "${path.module}/helm.astronomer.io"
+  namespace = "${kubernetes_namespace.astronomer.metadata.0.name}"
+  wait      = true
+  values = ["${local.astronomer_values}"}
+}
 
+resource "helm_release" "astronomer" {
+  count = "${var.local_umbrella_chart == "" ? 1 : 0}"
+  depends_on = ["kubernetes_cluster_role_binding.tiller_admin","helm_release.istio"]
   name      = "astronomer"
   version   = "${var.astronomer_version}"
   chart     = "helm.astronomer.io"
   repository = "${data.helm_repository.astronomer_repo.name}"
   namespace = "${kubernetes_namespace.astronomer.metadata.0.name}"
   wait      = true
-
-  set {
-    name  = "global.istioEnabled"
-    value = "${var.enable_istio == "true" ? true: false}"
-  }
-
-  set {
-    name  = "global.baseDomain"
-    value = "${var.base_domain}"
-  }
-
-  set {
-    name  = "nginx.loadBalancerIp"
-    value = "${var.load_balancer_ip == "" ? "~": var.load_balancer_ip}"
-  }
-
-  set {
-    name  = "nginx.privateLoadBalancer"
-    value = "${var.cluster_type == "private" ? true: false}"
-  }
-
-  set {
-    name  = "nginx.perserveSourceIp"
-    value = true
-  }
-
-  set {
-    name  = "nginx.perserveSourceIp"
-    value = true
-  }
+  values = ["${local.astronomer_values}"}
 }

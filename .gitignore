@@ -36,3 +36,6 @@ fabric.properties
 .idea
 __pycache__
 __pycache__/*
+
+helm.astronomer.io/*
+helm.astronomer.io
