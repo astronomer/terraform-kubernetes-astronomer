@@ -1,3 +1,5 @@
 # Astronomer Module
 
-- This is a platform-agnostic module to deploy Astronomer on kubernetes
+Deploy Astronomer on Kubernetes
+
+- Assumes namespace already exists
