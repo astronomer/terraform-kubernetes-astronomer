@@ -1,3 +1,8 @@
-# Astronomer Module
+# Astronomer System Components
 
-- This is a platform-agnostic module to deploy Astronomer on kubernetes
+Requires Terraform 0.12+
+
+## Features:
+
+- Tiller
+- Istio
