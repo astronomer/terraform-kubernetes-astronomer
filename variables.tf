@@ -1,3 +1,7 @@
+variable "cluster_type" {
+  type        = string
+}
+
 variable "db_connection_string" {
   type        = string
   description = "Should look something like this - postgres://username:password@endpoint:port"
@@ -28,7 +32,7 @@ variable "local_umbrella_chart" {
 }
 
 variable "astronomer_version" {
-  default = "v0.9.1-alpha.5"
+  default = "v0.9.1-alpha.4"
   type    = string
 }
 
@@ -38,7 +42,18 @@ variable "load_balancer_ip" {
 }
 
 variable "astronomer_namespace" {
-  default = "astronomer"
-  type    = string
+  default     = "astronomer"
+  type        = string
 }
+
+variable "enable_istio" {
+  default     = "false"
+  type        = string
+}
+
+variable "enable_gvisor" {
+  default     = "false"
+  type        = string
+}
+
 
