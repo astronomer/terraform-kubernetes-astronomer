@@ -1,25 +1,26 @@
 resource "null_resource" "helm_repo" {
   provisioner "local-exec" {
     command = <<EOF
-    if [ ! -d ${path.module}/helm.astronomer.io ]; then
-      git clone https://github.com/astronomer/helm.astronomer.io.git ${path.module}/helm.astronomer.io
+    if [ ! -d ./helm.astronomer.io ]; then
+      git clone https://github.com/astronomer/helm.astronomer.io.git
     fi
-    cd "${path.module}/helm.astronomer.io" && \
+    cd "./helm.astronomer.io" && \
     git checkout ${var.astronomer_version}
     EOF
   }
 
   provisioner "local-exec" {
     when    = "destroy"
-    command = "rm -rf '${path.module}/helm.astronomer.io'"
+    command = "rm -rf './helm.astronomer.io'"
   }
 }
 
 # this is for development use
 resource "helm_release" "astronomer_local" {
+  depends_on = ["null_resource.helm_repo"]
   name      = "astronomer"
   version   = var.astronomer_version
-  chart     = "${path.module}/helm.astronomer.io"
+  chart     = "./helm.astronomer.io"
   namespace = var.astronomer_namespace
   wait      = true
   values = [local.astronomer_values]
