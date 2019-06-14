@@ -6,4 +6,3 @@ resource "kubernetes_namespace" "astronomer" {
     }
   }
 }
-

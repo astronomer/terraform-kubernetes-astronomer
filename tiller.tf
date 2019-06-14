@@ -21,7 +21,7 @@ resource "kubernetes_cluster_role_binding" "tiller_admin" {
     namespace = "kube-system"
   }
   provisioner "local-exec" {
-    command = "helm init --service-account tiller --upgrade --client-only"
+    command = "helm init --service-account tiller --upgrade --wait --client-only"
   }
 }
 
