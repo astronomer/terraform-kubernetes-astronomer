@@ -20,6 +20,10 @@ resource "helm_release" "istio_init" {
   chart      = "istio-init"
   namespace  = kubernetes_namespace.istio_system[0].metadata[0].name
   wait       = true
+  # give istio_init time to set up
+  provisioner "local-exec" {
+    command = "sleep 30"
+  }
 }
 
 resource "helm_release" "istio" {
