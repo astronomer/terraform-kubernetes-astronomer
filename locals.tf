@@ -44,6 +44,9 @@ nginx:
 astronomer:
   houston:
     config:
+      email:
+        enabled: true
+        smtpUrl: ${var.smtp_uri == "" ? "" : var.smtp_uri}
       commander:
         enabled: false
       deployments:
@@ -68,4 +71,3 @@ astronomer:
 EOF
 
 }
-
