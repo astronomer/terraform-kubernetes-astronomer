@@ -1,5 +1,5 @@
 variable "cluster_type" {
-  type        = string
+  type = string
 }
 
 variable "db_connection_string" {
@@ -42,18 +42,26 @@ variable "load_balancer_ip" {
 }
 
 variable "astronomer_namespace" {
-  default     = "astronomer"
-  type        = string
+  default = "astronomer"
+  type    = string
 }
 
 variable "enable_istio" {
-  default     = "false"
-  type        = string
+  default = "false"
+  type    = string
 }
 
 variable "enable_gvisor" {
-  default     = "false"
-  type        = string
+  default = "false"
+  type    = string
 }
 
+variable "gcp_default_service_account_key" {
+  default = ""
+  type    = string
+}
 
+variable "container_registry_bucket_name" {
+  default = ""
+  type    = string
+}

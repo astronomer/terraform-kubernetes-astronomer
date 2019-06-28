@@ -25,3 +25,17 @@ resource "kubernetes_secret" "astronomer_tls" {
     "tls.key" = var.tls_key
   }
 }
+
+resource "kubernetes_secret" "astronomer-gcs-keyfile" {
+  count = var.gcp_default_service_account_key != "" ? 1 : 0
+  metadata {
+    name      = "astronomer-gcs-keyfile"
+    namespace = var.astronomer_namespace
+  }
+
+  type = "kubernetes.io/generic"
+
+  data = {
+    "astronomer-gcs-keyfile" = var.gcp_default_service_account_key
+  }
+}
