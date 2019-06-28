@@ -13,6 +13,10 @@ resource "null_resource" "helm_repo" {
     when    = "destroy"
     command = "rm -rf './helm.astronomer.io'"
   }
+
+  triggers = {
+    astronomer_version = var.astronomer_version
+  }
 }
 
 # this is for development use
