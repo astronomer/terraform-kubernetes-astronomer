@@ -44,10 +44,6 @@ nginx:
 astronomer:
   houston:
     config:
-      commander:
-        enabled: false
-      deployments:
-        logHelmValues: true
         helm:
            affinity:
              nodeAffinity:
