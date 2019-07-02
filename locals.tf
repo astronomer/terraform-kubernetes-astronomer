@@ -42,7 +42,7 @@ astronomer:
     %{if var.smtp_uri != ""}
         email:
           enabled: true
-          smtpUrl: var.smtp_uri
+          smtpUrl: ${var.smtp_uri}
     %{endif}
         helm:
            affinity:
