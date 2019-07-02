@@ -6,14 +6,11 @@ global:
   baseDomain: ${var.base_domain}
   tlsSecret: astronomer-tls
   istioEnabled: ${var.enable_istio == "true" ? true : false}
-
 nginx:
   loadBalancerIP: ${var.load_balancer_ip == "" ? "~" : var.load_balancer_ip}
   privateLoadBalancer: ${var.cluster_type == "private" ? true : false}
   perserveSourceIP: true
-
 %{if var.enable_gvisor == "true"}
-
   platformNodePool:
     affinity:
       nodeAffinity:
@@ -24,7 +21,6 @@ nginx:
               operator: In
               values:
               - "false"
-
   deploymentNodePool:
     affinity:
       nodeAffinity:
@@ -40,17 +36,14 @@ nginx:
         key: sandbox.gke.io/runtime
         operator: Equal
         value: gvisor
-
 astronomer:
-%{if var.smtp_uri == "true"}
   houston:
     config:
-      email:
-        enabled: true
-        smtpUrl: ${var.smtp_uri == "" ? "" : var.smtp_uri}
-        %{endif}
-      deployments:
-        logHelmValues: true
+    %{if var.smtp_uri == "true"}
+        email:
+          enabled: true
+          smtpUrl: ${var.smtp_uri == "" ? "" : var.smtp_uri}
+          %{endif}
         helm:
            affinity:
              nodeAffinity:
@@ -66,7 +59,6 @@ astronomer:
                key: sandbox.gke.io/runtime
                operator: Equal
                value: gvisor
-
 %{endif}
 EOF
 
