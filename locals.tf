@@ -42,13 +42,13 @@ nginx:
         value: gvisor
 
 astronomer:
+%{if var.smtp_uri == "true"}
   houston:
     config:
       email:
         enabled: true
         smtpUrl: ${var.smtp_uri == "" ? "" : var.smtp_uri}
-      commander:
-        enabled: false
+        %{endif}
       deployments:
         logHelmValues: true
         helm:
