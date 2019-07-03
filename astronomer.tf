@@ -10,7 +10,7 @@ resource "null_resource" "helm_repo" {
   }
 
   provisioner "local-exec" {
-    when    = "destroy"
+    when = "destroy"
     command = "rm -rf './helm.astronomer.io'"
   }
 
@@ -22,11 +22,11 @@ resource "null_resource" "helm_repo" {
 # this is for development use
 resource "helm_release" "astronomer_local" {
   depends_on = ["null_resource.helm_repo"]
-  name      = "astronomer"
-  version   = var.astronomer_version
-  chart     = "./helm.astronomer.io"
+  name = "astronomer"
+  version = var.astronomer_version
+  chart = "./helm.astronomer.io"
   namespace = var.astronomer_namespace
-  wait      = true
+  wait = true
   values = [local.astronomer_values]
 }
 
