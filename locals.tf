@@ -39,14 +39,11 @@ nginx:
 astronomer:
   houston:
     config:
-<<<<<<< HEAD
     %{if var.smtp_uri != ""}
         email:
           enabled: true
           smtpUrl: ${var.smtp_uri}
     %{endif}
-=======
->>>>>>> master
         helm:
            affinity:
              nodeAffinity:
