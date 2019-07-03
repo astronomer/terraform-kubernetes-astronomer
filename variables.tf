@@ -13,3 +13,13 @@ variable "astronomer_namespace" {
   type    = string
 }
 
+# https://github.com/hashicorp/terraform/issues/1178
+resource "null_resource" "dependency_getter" {
+  triggers = {
+    my_dependencies = "${join(",", var.dependencies)}"
+  }
+}
+variable "dependencies" {
+  default = [""]
+  type    = list(string)
+}
