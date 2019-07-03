@@ -32,7 +32,8 @@ variable "local_umbrella_chart" {
 }
 
 variable "astronomer_version" {
-  default = "v0.9.1-alpha.4"
+  description = "verison of helm chart to use, do not include a 'v' at the front"
+  default = "0.9.2"
   type    = string
 }
 
