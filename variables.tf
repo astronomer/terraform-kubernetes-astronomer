@@ -56,4 +56,7 @@ variable "enable_gvisor" {
   type        = string
 }
 
-
+variable "smtp_uri" {
+  default     = ""
+  type        = string
+}
