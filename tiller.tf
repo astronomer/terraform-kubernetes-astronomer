@@ -1,27 +1,12 @@
-resource "kubernetes_service_account" "tiller" {
-  metadata {
-    name      = "tiller"
-    namespace = "kube-system"
-  }
+module tiller {
+  source = "./modules/terraform-kubernetes-tiller"
+  tiller_version = var.tiller_version
 }
 
-resource "kubernetes_cluster_role_binding" "tiller_admin" {
-  depends_on = [kubernetes_service_account.tiller]
-  metadata {
-    name = "tiller"
-  }
-  role_ref {
-    api_group = "rbac.authorization.k8s.io"
-    kind      = "ClusterRole"
-    name      = "cluster-admin"
-  }
-  subject {
-    kind      = "ServiceAccount"
-    name      = "tiller"
-    namespace = "kube-system"
-  }
-  provisioner "local-exec" {
-    command = "helm init --service-account tiller --upgrade --wait --client-only"
-  }
+# wait a sec for tiller to be ready before proceeding
+resource null_resource wait_for_tiller {
+  depends_on = [module.tiller]
+   provisioner "local-exec" {
+     command = "sleep 10"
+   }
 }
-

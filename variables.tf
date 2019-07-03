@@ -8,6 +8,16 @@ variable "istio_helm_release_version" {
   type    = string
 }
 
+variable "tiller_version" {
+  default = "2.14.1"
+  type = string
+}
+
+variable "tiller_namespace" {
+  default = "kube-system"
+  type = string
+}
+
 variable "astronomer_namespace" {
   default = "astronomer"
   type    = string
