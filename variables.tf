@@ -1,5 +1,5 @@
 variable "cluster_type" {
-  type        = string
+  type = string
 }
 
 variable "db_connection_string" {
@@ -42,21 +42,32 @@ variable "load_balancer_ip" {
 }
 
 variable "astronomer_namespace" {
-  default     = "astronomer"
-  type        = string
+  default = "astronomer"
+  type    = string
 }
 
 variable "enable_istio" {
-  default     = "false"
-  type        = string
+  default = "false"
+  type    = string
 }
 
 variable "enable_gvisor" {
-  default     = "false"
-  type        = string
+  default = "false"
+  type    = string
 }
 
 variable "smtp_uri" {
-  default     = ""
-  type        = string
+  default = ""
+  type    = string
+}
+
+# https://github.com/hashicorp/terraform/issues/1178
+resource "null_resource" "dependency_getter" {
+  triggers = {
+    my_dependencies = "${join(",", var.dependencies)}"
+  }
+}
+variable "dependencies" {
+  default = [""]
+  type    = list(string)
 }
