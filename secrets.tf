@@ -1,5 +1,7 @@
 # Create prerequisite resources
 resource "kubernetes_secret" "astronomer_bootstrap" {
+  depends_on = [null_resource.dependency_getter]
+
   metadata {
     name      = "astronomer-bootstrap"
     namespace = var.astronomer_namespace
@@ -13,6 +15,8 @@ resource "kubernetes_secret" "astronomer_bootstrap" {
 }
 
 resource "kubernetes_secret" "astronomer_tls" {
+  depends_on = [null_resource.dependency_getter]
+
   metadata {
     name      = "astronomer-tls"
     namespace = var.astronomer_namespace

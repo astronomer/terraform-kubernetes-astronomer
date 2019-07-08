@@ -1,5 +1,6 @@
 variable "cluster_type" {
-  type = string
+  default = "private"
+  type    = string
 }
 
 variable "db_connection_string" {
@@ -18,7 +19,8 @@ variable "tls_key" {
 }
 
 variable "base_domain" {
-  type = string
+  type        = string
+  description = "<var.deployment_id>.<var.route53_domain>"
 }
 
 variable "private_load_balancer" {
@@ -33,8 +35,8 @@ variable "local_umbrella_chart" {
 
 variable "astronomer_version" {
   description = "verison of helm chart to use, do not include a 'v' at the front"
-  default = "0.9.2"
-  type    = string
+  default     = "0.9.2"
+  type        = string
 }
 
 variable "load_balancer_ip" {

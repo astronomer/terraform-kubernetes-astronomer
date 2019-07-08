@@ -31,9 +31,9 @@ resource "null_resource" "helm_repo" {
 # this is for development use
 resource "helm_release" "astronomer_local" {
   depends_on = [null_resource.helm_repo,
-                null_resource.dependency_getter,
-                kubernetes_secret.astronomer_bootstrap,
-                kubernetes_secret.astronomer_tls]
+    null_resource.dependency_getter,
+    kubernetes_secret.astronomer_bootstrap,
+  kubernetes_secret.astronomer_tls]
   name = "astronomer"
   version = var.astronomer_version
   chart = "./helm.astronomer.io"
