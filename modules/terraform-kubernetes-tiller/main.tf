@@ -177,7 +177,6 @@ resource "kubernetes_service" "this" {
     selector = {
       "app.kubernetes.io/name"      = "helm"
       "app.kubernetes.io/component" = "tiller"
-      "app.kubernetes.io/version"   = var.tiller_version
     }
 
     type = var.tiller_service_type
