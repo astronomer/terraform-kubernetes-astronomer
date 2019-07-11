@@ -6,7 +6,6 @@ variable route53_domain {
 
 module "aws" {
   source         = "astronomer/astronomer-aws/aws"
-  version        = "1.1.2"
   deployment_id  = var.deployment_id
   admin_email    = "steven@astronomer.io"
   route53_domain = var.route53_domain
@@ -23,7 +22,6 @@ module "aws" {
 module "system_components" {
   dependencies = [module.aws.depended_on]
   source       = "astronomer/astronomer-system-components/kubernetes"
-  version      = "0.0.8"
   enable_istio = "false"
 }
 
