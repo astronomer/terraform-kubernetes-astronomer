@@ -1,23 +1,39 @@
 resource "null_resource" "helm_repo" {
   provisioner "local-exec" {
     command = <<EOF
+    set -xe
+    cd ${path.root}
     if [ ! -d ./helm.astronomer.io ]; then
       git clone https://github.com/astronomer/helm.astronomer.io.git
+      cd helm.astronomer.io
+      git checkout v${var.astronomer_version}
+      cd ..
     fi
-    cd "./helm.astronomer.io" && \
-    git checkout ${var.astronomer_version}
+    cd ${path.root}/helm.astronomer.io
+    VERSION=$(git rev-parse --abbrev-ref HEAD)
+    if [ ! $VERSION -eq v${var.astronomer_version} ]; then
+      cd ..
+      if [ ! -d ./backups ]; then
+        mkdir backups
+      fi
+      mv helm.astronomer.io backups/helm.astronomer.io.$VERSION.${timestamp()}
+      git clone https://github.com/astronomer/helm.astronomer.io.git
+      git checkout v${var.astronomer_version}
+    fi
     EOF
   }
 
-  provisioner "local-exec" {
-    when = "destroy"
-    command = "rm -rf './helm.astronomer.io'"
+  triggers = {
+    astronomer_version = var.astronomer_version
   }
 }
 
 # this is for development use
 resource "helm_release" "astronomer_local" {
-  depends_on = ["null_resource.helm_repo"]
+  depends_on = [null_resource.helm_repo,
+    null_resource.dependency_getter,
+    kubernetes_secret.astronomer_bootstrap,
+  kubernetes_secret.astronomer_tls]
   name = "astronomer"
   version = var.astronomer_version
   chart = "./helm.astronomer.io"

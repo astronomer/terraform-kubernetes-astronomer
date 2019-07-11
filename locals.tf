@@ -45,6 +45,11 @@ astronomer:
 %{if var.enable_gvisor == "true"}
   houston:
     config:
+    %{if var.smtp_uri != ""}
+      email:
+        enabled: true
+        smtpUrl: ${var.smtp_uri}
+    %{endif}
       deployments:
         helm:
           affinity:
@@ -71,5 +76,3 @@ astronomer:
 
 EOF
 }
-
-

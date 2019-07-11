@@ -1,5 +1,6 @@
 variable "cluster_type" {
-  type = string
+  default = "private"
+  type    = string
 }
 
 variable "db_connection_string" {
@@ -18,7 +19,8 @@ variable "tls_key" {
 }
 
 variable "base_domain" {
-  type = string
+  type        = string
+  description = "<var.deployment_id>.<var.route53_domain>"
 }
 
 variable "private_load_balancer" {
@@ -32,8 +34,9 @@ variable "local_umbrella_chart" {
 }
 
 variable "astronomer_version" {
-  default = "v0.9.1-alpha.4"
-  type    = string
+  description = "verison of helm chart to use, do not include a 'v' at the front"
+  default     = "0.9.2"
+  type        = string
 }
 
 variable "load_balancer_ip" {
@@ -61,7 +64,24 @@ variable "gcp_default_service_account_key" {
   type    = string
 }
 
+variable "smtp_uri" {
+  default = ""
+  type    = string
+}
+
 variable "container_registry_bucket_name" {
   default = ""
   type    = string
+}
+
+# https://github.com/hashicorp/terraform/issues/1178
+resource "null_resource" "dependency_getter" {
+  triggers = {
+    my_dependencies = "${join(",", var.dependencies)}"
+  }
+}
+
+variable "dependencies" {
+  default = [""]
+  type    = list(string)
 }

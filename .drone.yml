@@ -1,18 +1,129 @@
-pipeline:
-  terraform_lint_and_validate:
-    image: alpine
-    secrets: [ google_application_credentials ]
-    commands:
-    - apk add --no-cache ca-certificates openssl curl python3 git bash terraform
-    - pip3 install pre-commit
-    - cd gcp
-    - pre-commit install --install-hooks
-    - pre-commit run -a
+kind: pipeline
+name: terraform-kubernetes-astronomer
 
-  notify:
-    image: plugins/slack
-    secrets: [ slack_webhook ]
-    webhook: $${slack_webhook}
-    channel: platform
-    when:
-      status: [ failure, changed ]
+steps:
+
+- name: lint
+  image: hashicorp/terraform:light
+  commands:
+    - cp providers.tf.example providers.tf
+    - terraform init
+    - terraform fmt -check=true
+    - terraform validate -var "deployment_id=validate" -var "db_connection_string=fake" -var "tls_cert=fake" -var "tls_key=fake" -var "base_domain=fake.com"
+    - |
+      for example in $(find examples -maxdepth 1 -mindepth 1 -type d); do
+      cp providers.tf $example
+      cd $example
+      echo $example
+      terraform init
+      terraform fmt -check=true
+      terraform validate -var "deployment_id=citest"
+      cd -
+      done
+    - terraform -v
+  when:
+    event:
+      - pull_request
+      - push
+
+- name: terraform_apply
+  image: sjmiller609/helm-kubectl-terraform:latest
+  environment:
+    AWS_ACCESS_KEY_ID:
+      from_secret: AWS_ACCESS_KEY_ID
+    AWS_SECRET_ACCESS_KEY:
+      from_secret: AWS_SECRET_ACCESS_KEY
+  commands:
+    - EXAMPLE=aws pipeline/run_terraform.sh
+  when:
+    event:
+      - push
+    branch:
+      - master
+
+- name: terraform_destroy
+  image: sjmiller609/helm-kubectl-terraform:latest
+  environment:
+    AWS_ACCESS_KEY_ID:
+      from_secret: AWS_ACCESS_KEY_ID
+    AWS_SECRET_ACCESS_KEY:
+      from_secret: AWS_SECRET_ACCESS_KEY
+  commands:
+    - DESTROY=1 EXAMPLE=aws pipeline/run_terraform.sh
+  when:
+    event:
+      - push
+    status:
+      - failure
+      - success
+    branch:
+      - master
+
+- name: git_tag
+  image: docker:git
+  environment:
+    DEPLOY_KEY:
+      from_secret: DEPLOY_KEY
+  commands:
+    - eval `ssh-agent`
+    - echo "$DEPLOY_KEY" | ssh-add -
+    - TAG=1.1.${DRONE_BUILD_NUMBER}
+    - git tag $TAG
+    - mkdir -p $HOME/.ssh
+    - ssh-keyscan -t rsa github.com >> $HOME/.ssh/known_hosts
+    - git push $DRONE_GIT_SSH_URL $DRONE_BRANCH --tags
+  when:
+    event:
+      - push
+    status:
+      - success
+    branch:
+      - master
+    repo:
+      - astronomer/terraform-kubernetes-astronomer
+
+- name: slack
+  image: plugins/slack
+  settings:
+    webhook:
+      from_secret: WEBHOOK_URL
+    channel: infrastructure
+    username: terraform-ci
+    template: >
+      {{repo.name}}
+      {{build.link}}
+      {{#success build.status}}
+        succeeded
+      {{else}}
+        failed
+      {{/success}}
+  when:
+    event:
+      - push
+    status:
+      - success
+      - failure
+    branch:
+      - master
+    repo:
+      - astronomer/terraform-kubernetes-astronomer
+
+- name: slack_tag
+  image: plugins/slack
+  settings:
+    webhook:
+      from_secret: WEBHOOK_URL
+    channel: infrastructure
+    username: terraform-ci
+    template: >
+      {{repo.name}}
+      version {{build.tag}} released
+  when:
+    event:
+      - tag
+    status:
+      - success
+    branch:
+      - master
+    repo:
+      - astronomer/terraform-kubernetes-astronomer
