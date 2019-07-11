@@ -45,21 +45,22 @@ astronomer:
 %{if var.enable_gvisor == "true"}
   houston:
     config:
-      helm:
-        affinity:
-          nodeAffinity:
-            requiredDuringSchedulingIgnoredDuringExecution:
-              nodeSelectorTerms:
-              - matchExpressions:
-                - key: "sandbox.gke.io/runtime"
-                  operator: In
-                  values:
-                  - "gvisor"
-        tolerations:
-        - effect: NoSchedule
-          key: sandbox.gke.io/runtime
-          operator: Equal
-          value: gvisor
+      deployments:
+        helm:
+          affinity:
+            nodeAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+                nodeSelectorTerms:
+                - matchExpressions:
+                  - key: "sandbox.gke.io/runtime"
+                    operator: In
+                    values:
+                    - "gvisor"
+          tolerations:
+          - effect: NoSchedule
+            key: sandbox.gke.io/runtime
+            operator: Equal
+            value: gvisor
 %{endif}
 %{if var.gcp_default_service_account_key != ""}
   registry:
