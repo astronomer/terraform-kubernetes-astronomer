@@ -6,10 +6,7 @@ global:
   baseDomain: ${var.base_domain}
   tlsSecret: astronomer-tls
   istioEnabled: ${var.enable_istio == "true" ? true : false}
-nginx:
-  loadBalancerIP: ${var.load_balancer_ip == "" ? "~" : var.load_balancer_ip}
-  privateLoadBalancer: ${var.cluster_type == "private" ? true : false}
-  perserveSourceIP: true
+
 %{if var.enable_gvisor == "true"}
   platformNodePool:
     affinity:
@@ -21,6 +18,7 @@ nginx:
               operator: In
               values:
               - "false"
+
   deploymentNodePool:
     affinity:
       nodeAffinity:
@@ -32,34 +30,49 @@ nginx:
               values:
               - "gvisor"
     tolerations:
-      - effect: NoSchedule
-        key: sandbox.gke.io/runtime
-        operator: Equal
-        value: gvisor
+    - effect: NoSchedule
+      key: sandbox.gke.io/runtime
+      operator: Equal
+      value: gvisor
+%{endif}
+
+nginx:
+  loadBalancerIP: ${var.load_balancer_ip == "" ? "~" : var.load_balancer_ip}
+  privateLoadBalancer: ${var.cluster_type == "private" ? true : false}
+  perserveSourceIP: true
+
 astronomer:
+%{if var.enable_gvisor == "true"}
   houston:
     config:
     %{if var.smtp_uri != ""}
-        email:
-          enabled: true
-          smtpUrl: ${var.smtp_uri}
+      email:
+        enabled: true
+        smtpUrl: ${var.smtp_uri}
     %{endif}
+      deployments:
         helm:
-           affinity:
-             nodeAffinity:
-               requiredDuringSchedulingIgnoredDuringExecution:
-                 nodeSelectorTerms:
-                 - matchExpressions:
-                   - key: "sandbox.gke.io/runtime"
-                     operator: In
-                     values:
-                     - "gvisor"
-           tolerations:
-             - effect: NoSchedule
-               key: sandbox.gke.io/runtime
-               operator: Equal
-               value: gvisor
+          affinity:
+            nodeAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+                nodeSelectorTerms:
+                - matchExpressions:
+                  - key: "sandbox.gke.io/runtime"
+                    operator: In
+                    values:
+                    - "gvisor"
+          tolerations:
+          - effect: NoSchedule
+            key: sandbox.gke.io/runtime
+            operator: Equal
+            value: gvisor
 %{endif}
-EOF
+%{if var.gcp_default_service_account_key != ""}
+  registry:
+    gcs:
+      enabled: true
+      bucket: ${var.container_registry_bucket_name}
+%{endif}  
 
+EOF
 }

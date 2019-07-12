@@ -59,7 +59,17 @@ variable "enable_gvisor" {
   type    = string
 }
 
+variable "gcp_default_service_account_key" {
+  default = ""
+  type    = string
+}
+
 variable "smtp_uri" {
+  default = ""
+  type    = string
+}
+
+variable "container_registry_bucket_name" {
   default = ""
   type    = string
 }
@@ -70,6 +80,7 @@ resource "null_resource" "dependency_getter" {
     my_dependencies = "${join(",", var.dependencies)}"
   }
 }
+
 variable "dependencies" {
   default = [""]
   type    = list(string)
