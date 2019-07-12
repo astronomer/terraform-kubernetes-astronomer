@@ -123,7 +123,5 @@ steps:
       - tag
     status:
       - success
-    branch:
-      - master
     repo:
       - astronomer/terraform-kubernetes-astronomer
