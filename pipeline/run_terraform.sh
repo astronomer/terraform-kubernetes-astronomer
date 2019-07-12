@@ -14,6 +14,8 @@ sed -i "s/REPLACE/$DEPLOYMENT_ID/g" backend.tf
 
 terraform init
 
+cat .terraform/modules/modules.json | python -m json.tool
+
 if [ $DESTROY -eq 1 ]; then
   terraform destroy --auto-approve -var "deployment_id=$DEPLOYMENT_ID" -refresh=false -lock=false
 else
