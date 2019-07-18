@@ -39,7 +39,7 @@ resource "helm_release" "astronomer_local" {
   chart = "./helm.astronomer.io"
   namespace = var.astronomer_namespace
   wait = true
-  values = [local.astronomer_values]
+  values = [var.astronomer_helm_values]
 }
 
 /*
@@ -57,6 +57,6 @@ resource "helm_release" "astronomer" {
   repository = data.helm_repository.astronomer_repo.name
   namespace  = var.astronomer_namespace
   wait       = true
-  values = [local.astronomer_values]
+  values = [var.astronomer_helm_values]
 }
 */
