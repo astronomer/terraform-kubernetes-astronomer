@@ -13,11 +13,6 @@ variable "tls_key" {
   description = "The private key corresponding to the signed certificate tls_cert."
 }
 
-variable "private_load_balancer" {
-  default = true
-  type    = string
-}
-
 variable "local_umbrella_chart" {
   default = ""
   type    = string
