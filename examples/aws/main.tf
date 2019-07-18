@@ -33,6 +33,21 @@ module "astronomer" {
   db_connection_string = module.aws.db_connection_string
   tls_cert             = module.aws.tls_cert
   tls_key              = module.aws.tls_key
+
+  astronomer_helm_values = <<EOF
+---
+global:
+  # Base domain for all subdomains exposed through ingress
+  baseDomain: ${module.aws.base_domain}
+  tlsSecret: astronomer-tls
+  istioEnabled: false
+
+nginx:
+  loadBalancerIP: "~"
+  privateLoadBalancer: true
+  perserveSourceIP: true
+
+EOF
 }
 
 data "aws_lambda_invocation" "elb_name" {
