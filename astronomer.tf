@@ -1,4 +1,5 @@
 resource "null_resource" "helm_repo" {
+
   provisioner "local-exec" {
     command = <<EOF
     set -xe
@@ -24,7 +25,7 @@ resource "null_resource" "helm_repo" {
   }
 
   triggers = {
-    astronomer_version = var.astronomer_version
+    build_number = "${timestamp()}"
   }
 }
 
@@ -34,6 +35,7 @@ resource "helm_release" "astronomer_local" {
     null_resource.dependency_getter,
     kubernetes_secret.astronomer_bootstrap,
   kubernetes_secret.astronomer_tls]
+
   name = "astronomer"
   version = var.astronomer_version
   chart = "./helm.astronomer.io"
