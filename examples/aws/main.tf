@@ -6,6 +6,7 @@ variable route53_domain {
 
 module "aws" {
   source         = "astronomer/astronomer-aws/aws"
+  version        = "1.1.22"
   deployment_id  = var.deployment_id
   admin_email    = "steven@astronomer.io"
   route53_domain = var.route53_domain
@@ -26,21 +27,33 @@ module "system_components" {
 }
 
 module "astronomer" {
-  dependencies          = [module.system_components.depended_on]
-  source                = "../.."
-  cluster_type          = "private"
-  private_load_balancer = true
-  astronomer_version    = "0.9.2"
-  base_domain           = module.aws.base_domain
-  db_connection_string  = module.aws.db_connection_string
-  tls_cert              = module.aws.tls_cert
-  tls_key               = module.aws.tls_key
+  dependencies         = [module.system_components.depended_on]
+  source               = "../.."
+  astronomer_version   = "0.9.2"
+  db_connection_string = module.aws.db_connection_string
+  tls_cert             = module.aws.tls_cert
+  tls_key              = module.aws.tls_key
+
+  astronomer_helm_values = <<EOF
+---
+global:
+  # Base domain for all subdomains exposed through ingress
+  baseDomain: ${module.aws.base_domain}
+  tlsSecret: astronomer-tls
+  istioEnabled: false
+
+nginx:
+  loadBalancerIP: "~"
+  privateLoadBalancer: true
+  perserveSourceIP: true
+
+EOF
 }
 
 data "aws_lambda_invocation" "elb_name" {
-  depends_on    = [module.astronomer]
+  depends_on = [module.astronomer]
   function_name = "${module.aws.elb_lookup_function_name}"
-  input         = "{}"
+  input = "{}"
 }
 
 data "aws_elb" "nginx_lb" {
@@ -53,8 +66,8 @@ data "aws_route53_zone" "selected" {
 
 resource "aws_route53_record" "astronomer" {
   zone_id = "${data.aws_route53_zone.selected.zone_id}"
-  name    = "*.${var.deployment_id}.${data.aws_route53_zone.selected.name}"
-  type    = "CNAME"
-  ttl     = "30"
+  name = "*.${var.deployment_id}.${data.aws_route53_zone.selected.name}"
+  type = "CNAME"
+  ttl = "30"
   records = [data.aws_elb.nginx_lb.dns_name]
 }

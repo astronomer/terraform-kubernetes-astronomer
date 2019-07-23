@@ -1,8 +1,3 @@
-variable "cluster_type" {
-  default = "private"
-  type    = string
-}
-
 variable "db_connection_string" {
   type        = string
   description = "Should look something like this - postgres://username:password@endpoint:port"
@@ -18,16 +13,6 @@ variable "tls_key" {
   description = "The private key corresponding to the signed certificate tls_cert."
 }
 
-variable "base_domain" {
-  type        = string
-  description = "<var.deployment_id>.<var.route53_domain>"
-}
-
-variable "private_load_balancer" {
-  default = true
-  type    = string
-}
-
 variable "local_umbrella_chart" {
   default = ""
   type    = string
@@ -39,37 +24,12 @@ variable "astronomer_version" {
   type        = string
 }
 
-variable "load_balancer_ip" {
-  default = ""
-  type    = string
-}
-
 variable "astronomer_namespace" {
   default = "astronomer"
   type    = string
 }
 
-variable "enable_istio" {
-  default = "false"
-  type    = string
-}
-
-variable "enable_gvisor" {
-  default = "false"
-  type    = string
-}
-
 variable "gcp_default_service_account_key" {
-  default = ""
-  type    = string
-}
-
-variable "smtp_uri" {
-  default = ""
-  type    = string
-}
-
-variable "container_registry_bucket_name" {
   default = ""
   type    = string
 }
@@ -84,4 +44,10 @@ resource "null_resource" "dependency_getter" {
 variable "dependencies" {
   default = [""]
   type    = list(string)
+}
+
+variable "astronomer_helm_values" {
+  type        = "string"
+  description = "Values in raw yaml to pass to helm to override defaults in Astronomer Helm Chart."
+  default     = ""
 }
