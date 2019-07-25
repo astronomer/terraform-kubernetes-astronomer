@@ -1,18 +1,18 @@
-pipeline:
-  terraform_lint_and_validate:
-    image: alpine
-    secrets: [ google_application_credentials ]
-    commands:
-    - apk add --no-cache ca-certificates openssl curl python3 git bash terraform
-    - pip3 install pre-commit
-    - cd gcp
-    - pre-commit install --install-hooks
-    - pre-commit run -a
+kind: pipeline
+name: terraform-google-astronomer-cloud
 
-  notify:
-    image: plugins/slack
-    secrets: [ slack_webhook ]
-    webhook: $${slack_webhook}
-    channel: platform
-    when:
-      status: [ failure, changed ]
+steps:
+
+- name: lint
+  image: hashicorp/terraform:light
+  commands:
+    - cp providers.tf.example providers.tf
+    - terraform init
+    - terraform fmt -check=true
+    - terraform validate
+    - rm -rf .terraform
+    - terraform -v
+  when:
+    event:
+      - pull_request
+      - push
