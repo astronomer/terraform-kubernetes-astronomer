@@ -10,6 +10,30 @@ variable "enable_cloud_sql_proxy" {
   description = "A GCP feature for secure communication with Cloud SQL"
 }
 
+variable "cloudsql_instance" {
+  default     = ""
+  type        = string
+  description = "Used when enable_cloud_sql_proxy is true"
+}
+
+variable "gcp_region" {
+  default     = ""
+  type        = string
+  description = "Used when enable_cloud_sql_proxy is true"
+}
+
+variable "gcp_project" {
+  default     = ""
+  type        = string
+  description = "Used when enable_cloud_sql_proxy is true"
+}
+
+variable "gcp_service_account_key_json" {
+  default     = ""
+  type        = string
+  description = "Used when enable_cloud_sql_proxy is true"
+}
+
 variable "istio_helm_release_version" {
   default = "1.1.7"
   type    = string
