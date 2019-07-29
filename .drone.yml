@@ -6,7 +6,6 @@ steps:
 - name: lint
   image: hashicorp/terraform:light
   commands:
-    - cp providers.tf.example providers.tf
     - terraform init
     - terraform fmt -check=true
     - terraform validate

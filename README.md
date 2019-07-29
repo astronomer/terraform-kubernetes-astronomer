@@ -6,3 +6,4 @@ Requires Terraform 0.12+
 
 - Tiller
 - Istio
+- Cloud SQL Proxy
