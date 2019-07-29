@@ -6,7 +6,7 @@ data "helm_repository" "rimusz" {
 }
 
 resource "helm_release" "cloud_sql_proxy" {
-  depends_on = [module.tiller]
+  depends_on = [module.tiller, helm_release.istio]
   count      = var.enable_cloud_sql_proxy ? 1 : 0
   name       = "pg-sqlproxy"
   version    = "0.13.1"
