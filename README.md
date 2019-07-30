@@ -1,7 +1,5 @@
 # Astronomer Kubernetes Deployment
 
-[![Build Status](https://cloud.drone.io/api/badges/astronomer/terraform-kubernetes-astronomer/status.svg)](https://cloud.drone.io/astronomer/terraform-kubernetes-astronomer)
-
 Deploy Astronomer on a Kubernetes cluster
 
 # Required in path and tested versions
