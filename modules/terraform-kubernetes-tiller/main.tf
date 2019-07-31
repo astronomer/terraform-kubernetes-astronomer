@@ -92,6 +92,9 @@ resource "kubernetes_deployment" "this" {
         service_account_name = kubernetes_service_account.this.metadata[0].name
 
         container {
+
+          command = ["/tiller", "--storage=secret"]
+
           env {
             name  = "TILLER_NAMESPACE"
             value = var.tiller_namespace
