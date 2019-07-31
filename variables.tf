@@ -10,6 +10,24 @@ variable "enable_cloud_sql_proxy" {
   description = "A GCP feature for secure communication with Cloud SQL"
 }
 
+variable "enable_aws_cluster_autoscaler" {
+  default     = false
+  type        = string
+  description = "Automatically scale out node pool(s) on AWS. Must set var.cluster_name"
+}
+
+variable "cluster_name" {
+  default     = ""
+  type        = string
+  description = "Used only with var.enable_aws_cluster_autoscaler"
+}
+
+variable "aws_region" {
+  default     = "us-east-1"
+  type        = string
+  description = "Used only with var.enable_aws_cluster_autoscaler"
+}
+
 variable "cloudsql_instance" {
   default     = ""
   type        = string
