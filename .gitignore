@@ -40,3 +40,4 @@ __pycache__/*
 helm.astronomer.io/*
 helm.astronomer.io
 kubeconfig
+backup
