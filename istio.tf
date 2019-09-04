@@ -39,5 +39,5 @@ resource "helm_release" "istio" {
     name  = "kiali.enabled"
     value = "true"
   }
+  values = [var.extra_istio_helm_values]
 }
-

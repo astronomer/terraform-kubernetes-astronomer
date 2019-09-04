@@ -82,3 +82,9 @@ variable "dependencies" {
   default = [""]
   type    = list(string)
 }
+
+variable "extra_istio_helm_values" {
+  type        = "string"
+  description = "Values in raw yaml to pass to helm to override defaults in Istio Helm Chart."
+  default     = ""
+}
