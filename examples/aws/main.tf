@@ -51,9 +51,9 @@ EOF
 }
 
 data "aws_lambda_invocation" "elb_name" {
-  depends_on = [module.astronomer]
+  depends_on    = [module.astronomer]
   function_name = "${module.aws.elb_lookup_function_name}"
-  input = "{}"
+  input         = "{}"
 }
 
 data "aws_elb" "nginx_lb" {
@@ -66,8 +66,8 @@ data "aws_route53_zone" "selected" {
 
 resource "aws_route53_record" "astronomer" {
   zone_id = "${data.aws_route53_zone.selected.zone_id}"
-  name = "*.${var.deployment_id}.${data.aws_route53_zone.selected.name}"
-  type = "CNAME"
-  ttl = "30"
+  name    = "*.${var.deployment_id}.${data.aws_route53_zone.selected.name}"
+  type    = "CNAME"
+  ttl     = "30"
   records = [data.aws_elb.nginx_lb.dns_name]
 }

@@ -10,16 +10,19 @@ resource "null_resource" "helm_repo" {
       git checkout v${var.astronomer_version}
       cd ..
     fi
-    cd ${path.root}/helm.astronomer.io
-    VERSION=$(git rev-parse --abbrev-ref HEAD)
-    if [ ! $VERSION -eq v${var.astronomer_version} ]; then
-      cd ..
-      if [ ! -d ./backups ]; then
-        mkdir backups
+    if [ ${var.astronomer_version} != "master" ]; then
+      cd ${path.root}/helm.astronomer.io
+      VERSION=$(git rev-parse --abbrev-ref HEAD)
+      if [ $VERSION != v${var.astronomer_version} ]; then
+        cd ..
+        if [ ! -d ./backups ]; then
+          mkdir backups
+        fi
+        mv helm.astronomer.io backups/helm.astronomer.io.$VERSION.${timestamp()}
+        git clone https://github.com/astronomer/helm.astronomer.io.git
+        cd helm.astronomer.io
+        git checkout v${var.astronomer_version}
       fi
-      mv helm.astronomer.io backups/helm.astronomer.io.$VERSION.${timestamp()}
-      git clone https://github.com/astronomer/helm.astronomer.io.git
-      git checkout v${var.astronomer_version}
     fi
     EOF
   }
@@ -36,12 +39,12 @@ resource "helm_release" "astronomer_local" {
     kubernetes_secret.astronomer_bootstrap,
   kubernetes_secret.astronomer_tls]
 
-  name = "astronomer"
-  version = var.astronomer_version
-  chart = "./helm.astronomer.io"
+  name      = "astronomer"
+  version   = var.astronomer_version
+  chart     = "./helm.astronomer.io"
   namespace = var.astronomer_namespace
-  wait = true
-  values = [var.astronomer_helm_values]
+  wait      = true
+  values    = [var.astronomer_helm_values]
 }
 
 /*
