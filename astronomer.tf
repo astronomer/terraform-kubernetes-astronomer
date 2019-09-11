@@ -3,6 +3,12 @@ resource "null_resource" "helm_repo" {
   provisioner "local-exec" {
     command = <<EOF
     set -xe
+    git config --global alias.nthlastcheckout '!nthlastcheckout'"() {
+        git reflog |
+        awk '\$3==\"checkout:\" {++n}
+             n=='\$${1-1}' {print \$NF; exit}
+             END {exit n!='\$${1-1}'}'
+        }; nthlastcheckout \"\$@\""
     cd ${path.root}
     if [ ! -d ./helm.astronomer.io ]; then
       git clone https://github.com/astronomer/helm.astronomer.io.git
@@ -12,7 +18,7 @@ resource "null_resource" "helm_repo" {
     fi
     if [ ${var.astronomer_version} != "master" ]; then
       cd ${path.root}/helm.astronomer.io
-      VERSION=$(git rev-parse --abbrev-ref HEAD)
+      VERSION=$(git nthlastcheckout)
       if [ $VERSION != v${var.astronomer_version} ]; then
         cd ..
         if [ ! -d ./backups ]; then
