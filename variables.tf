@@ -53,7 +53,7 @@ variable "gcp_service_account_key_json" {
 }
 
 variable "istio_helm_release_version" {
-  default = "1.1.7"
+  default = "1.3.0"
   type    = string
 }
 

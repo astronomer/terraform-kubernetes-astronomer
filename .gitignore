@@ -41,3 +41,4 @@ helm.astronomer.io/*
 helm.astronomer.io
 kubeconfig
 backup
+temp
