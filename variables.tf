@@ -75,7 +75,7 @@ variable "astronomer_namespace" {
 # https://github.com/hashicorp/terraform/issues/1178
 resource "null_resource" "dependency_getter" {
   triggers = {
-    my_dependencies = "${join(",", var.dependencies)}"
+    my_dependencies = join(",", var.dependencies)
   }
 }
 variable "dependencies" {
@@ -87,4 +87,30 @@ variable "extra_istio_helm_values" {
   type        = "string"
   description = "Values in raw yaml to pass to helm to override defaults in Istio Helm Chart."
   default     = ""
+}
+
+variable "enable_velero" {
+  default = false
+  type    = bool
+}
+
+variable "extra_velero_helm_values" {
+  type        = "string"
+  default     = ""
+  description = "Vales in raw yaml to pass to helm to helm to override defaults in Velero Helm Chart."
+}
+
+variable "velero_namespace_name" {
+  default     = "velero"
+  description = "Namespace to create to install Velero"
+}
+
+variable "velero_helm_repository" {
+  default     = "stable"
+  description = "Helm repository to use to download velero chart"
+}
+
+variable "velero_helm_chart_version" {
+  default     = "2.1.6"
+  description = "Helm Chart Version to use to deploy Velero"
 }
