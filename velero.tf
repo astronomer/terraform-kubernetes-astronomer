@@ -1,5 +1,5 @@
 resource "kubernetes_namespace" "velero" {
-  count = var.enable_velero == "true" ? 1 : 0
+  count = var.enable_velero ? 1 : 0
   metadata {
     name = var.velero_namespace_name
   }
@@ -7,7 +7,7 @@ resource "kubernetes_namespace" "velero" {
 
 # Namespace admin role
 resource "kubernetes_role" "tiller-velero" {
-  count = var.enable_velero == "true" ? 1 : 0
+  count = var.enable_velero ? 1 : 0
   metadata {
     name      = "tiller-velero"
     namespace = kubernetes_namespace.velero[0].metadata[0].name
@@ -23,7 +23,7 @@ resource "kubernetes_role" "tiller-velero" {
 
 # Namespace admin role bindings
 resource "kubernetes_role_binding" "tiller-velero" {
-  count = var.enable_velero == "true" ? 1 : 0
+  count = var.enable_velero ? 1 : 0
   metadata {
     name      = "tiller-velero"
     namespace = kubernetes_namespace.velero[0].metadata[0].name
@@ -44,7 +44,7 @@ resource "kubernetes_role_binding" "tiller-velero" {
 }
 
 resource "helm_release" "velero" {
-  count      = var.enable_velero == "true" ? 1 : 0
+  count      = var.enable_velero ? 1 : 0
   depends_on = ["kubernetes_role.tiller-velero", "kubernetes_role_binding.tiller-velero"]
   name       = "velero"
   repository = var.velero_helm_repository

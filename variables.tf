@@ -90,8 +90,8 @@ variable "extra_istio_helm_values" {
 }
 
 variable "enable_velero" {
-  default = "false"
-  type    = string
+  default = false
+  type    = bool
 }
 
 variable "extra_velero_helm_values" {
