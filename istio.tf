@@ -22,7 +22,7 @@ resource "null_resource" "helm_repo" {
   }
 
   triggers = {
-    istio_version = var.istio_helm_release_version
+    build_number = "${timestamp()}"
   }
 }
 
