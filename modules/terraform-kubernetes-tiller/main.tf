@@ -185,4 +185,3 @@ resource "kubernetes_service" "this" {
     type = var.tiller_service_type
   }
 }
-

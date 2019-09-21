@@ -7,4 +7,3 @@ output "tiller_version" {
   description = "Version of Tiller that has been deployed."
   value       = var.tiller_version
 }
-

@@ -33,4 +33,3 @@ variable "tiller_image_pull_policy" {
   default     = "IfNotPresent"
   description = "Default pull policy to be used for the Tiller container image."
 }
-
