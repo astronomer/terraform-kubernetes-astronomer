@@ -33,3 +33,15 @@ variable "tiller_image_pull_policy" {
   default     = "IfNotPresent"
   description = "Default pull policy to be used for the Tiller container image."
 }
+
+variable "tolerations" {
+  type        = list(map(string))
+  default     = []
+  description = "Tolerations to apply to Tiller deployment"
+}
+
+variable "node_selectors" {
+  type        = map(string)
+  default     = {}
+  description = "Map of {label: value} to use as node selector for Tiller deployment"
+}

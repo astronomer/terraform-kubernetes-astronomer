@@ -114,3 +114,15 @@ variable "velero_helm_chart_version" {
   default     = "2.1.6"
   description = "Helm Chart Version to use to deploy Velero"
 }
+
+variable "tiller_tolerations" {
+  type        = list(map(string))
+  default     = []
+  description = "Tolerations to apply to Tiller deployment"
+}
+
+variable "tiller_node_selectors" {
+  type        = map(string)
+  default     = {}
+  description = "Map of {label: value} to use as node selector for Tiller deployment"
+}

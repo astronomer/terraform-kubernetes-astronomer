@@ -57,10 +57,12 @@ resource "kubernetes_deployment" "this" {
     }
   }
 
+
   spec {
     replicas = 1
     strategy {
     }
+
 
     selector {
       match_labels = {
@@ -81,6 +83,37 @@ resource "kubernetes_deployment" "this" {
       }
 
       spec {
+
+        dynamic "affinity" {
+          for_each = length(var.node_selectors) > 0 ? ["placeholder"] : []
+          content {
+            node_affinity {
+              required_during_scheduling_ignored_during_execution {
+                dynamic "node_selector_term" {
+                  for_each = var.node_selectors
+                  content {
+                    match_expressions {
+                      key      = node_selector_term.key
+                      operator = "In"
+                      values   = [node_selector_term.value]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+
+        dynamic "toleration" {
+          for_each = var.tolerations
+          content {
+            key      = toleration.value["key"]
+            operator = toleration.value["operator"]
+            value    = toleration.value["value"]
+            effect   = toleration.value["effect"]
+          }
+        }
+
         volume {
           name = kubernetes_service_account.this.default_secret_name
           secret {
