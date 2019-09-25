@@ -37,7 +37,7 @@ resource "helm_release" "istio_init" {
   force_update = true
   # give istio_init time to set up
   provisioner "local-exec" {
-    command = "sleep 10"
+    command = "sleep ${var.sleep_for_after_istio_init}"
   }
 }
 

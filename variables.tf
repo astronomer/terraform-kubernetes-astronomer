@@ -3,6 +3,11 @@ variable "enable_istio" {
   type    = string
 }
 
+variable "sleep_for_after_istio_init" {
+  default = "10"
+  type    = string
+}
+
 # https://cloud.google.com/sql/docs/postgres/
 variable "enable_cloud_sql_proxy" {
   default     = false
