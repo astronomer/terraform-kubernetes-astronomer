@@ -9,3 +9,4 @@ Requires Terraform 0.12+
 - Istio (Optional)
 - GCP Cloud SQL Proxy (Optional)
 - AWS Cloud Autoscaler (Optional)
+- Kubecost (Optional)
