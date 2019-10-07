@@ -94,6 +94,12 @@ variable "extra_istio_helm_values" {
   default     = ""
 }
 
+variable "extra_googlesqlproxy_helm_values" {
+  type        = "string"
+  description = "Values in raw yaml to pass to helm to override defaults in Google SQL Proxy Helm Chart."
+  default     = ""
+}
+
 variable "extra_kubecost_helm_values" {
   type        = "string"
   description = "Values in raw yaml to pass to helm to override defaults in the Kubecost Helm Chart."
@@ -101,7 +107,7 @@ variable "extra_kubecost_helm_values" {
 }
 
 variable "kubecost_helm_chart_version" {
-  default     = "1.44.0"
+  default     = "1.44.3"
   type        = string
   description = "The helm chart version of Kubecost. Versions can be found here https://github.com/kubecost/cost-analyzer-helm-chart/releases"
 }

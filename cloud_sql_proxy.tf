@@ -15,6 +15,7 @@ resource "helm_release" "cloud_sql_proxy" {
   namespace  = kubernetes_namespace.astronomer.metadata.0.name
   wait       = true
 
+  values = [var.extra_googlesqlproxy_helm_values]
 
   set {
     name  = "serviceAccountKey"
