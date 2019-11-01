@@ -161,7 +161,13 @@ variable "tiller_node_selectors" {
   description = "Map of {label: value} to use as node selector for Tiller deployment"
 }
 
-variable "enable_istio_local_gateway" {
-  type    = bool
-  default = false
+variable "enable_knative" {
+  type        = bool
+  default     = false
+  description = "enable_istio=true is required for knative to work"
+}
+
+variable "knative_helm_release_version" {
+  default     = "0.1.0"
+  description = "Helm Chart Version to use to deploy Knative"
 }
