@@ -22,7 +22,7 @@ resource "null_resource" "helm_repo" {
   }
 
   triggers = {
-    build_number = "${timestamp()}"
+    build_number = timestamp()
   }
 }
 
@@ -50,5 +50,5 @@ resource "helm_release" "istio" {
   version    = var.istio_helm_release_version
   wait       = true
 
-  values = [var.extra_istio_helm_values]
+  values = compact([var.enable_istio_local_gateway ? local.istio_local_gateway_helm_values : "", var.extra_istio_helm_values])
 }

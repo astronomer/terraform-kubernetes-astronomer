@@ -160,3 +160,8 @@ variable "tiller_node_selectors" {
   default     = {}
   description = "Map of {label: value} to use as node selector for Tiller deployment"
 }
+
+variable "enable_istio_local_gateway" {
+  type    = bool
+  default = false
+}

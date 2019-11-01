@@ -42,3 +42,4 @@ helm.astronomer.io
 kubeconfig
 backup
 temp
+istio
