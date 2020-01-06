@@ -12,12 +12,10 @@ resource "null_resource" "helm_repo" {
     cd ${path.root}
     if [ ! -d ./helm.astronomer.io ]; then
       git clone https://github.com/astronomer/helm.astronomer.io.git
-      cd helm.astronomer.io
-      git checkout v${var.astronomer_version}
-      cd ..
     fi
     if [ ${var.astronomer_version} != "master" ]; then
-      cd ${path.root}/helm.astronomer.io
+      cd helm.astronomer.io
+      git checkout v${var.astronomer_version}
       VERSION=$(git nthlastcheckout)
       if [ $VERSION != v${var.astronomer_version} ]; then
         cd ..
