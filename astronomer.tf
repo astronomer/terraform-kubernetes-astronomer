@@ -48,6 +48,7 @@ resource "helm_release" "astronomer_local" {
   chart     = "./helm.astronomer.io"
   namespace = var.astronomer_namespace
   wait      = true
+  timeout   = 900
   values    = [var.astronomer_helm_values]
 }
 
