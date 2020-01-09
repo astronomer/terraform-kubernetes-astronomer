@@ -5,6 +5,15 @@ resource "kubernetes_namespace" "istio_system" {
   }
 }
 
+# Istio 'root namespace'
+# https://istio.io/docs/reference/config/istio.mesh.v1alpha1/#MeshConfig
+resource "kubernetes_namespace" "istio_config" {
+  count = var.enable_istio == "true" ? 1 : 0
+  metadata {
+    name = "istio-config"
+  }
+}
+
 # Upgrade is better supported using a local chart
 # https://istio.io/docs/setup/kubernetes/#downloading-the-release
 # https://istio.io/docs/setup/kubernetes/upgrade/steps/
