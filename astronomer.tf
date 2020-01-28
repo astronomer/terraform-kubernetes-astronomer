@@ -31,13 +31,13 @@ resource "helm_release" "astronomer_local" {
     kubernetes_secret.astronomer_bootstrap,
   kubernetes_secret.astronomer_tls]
 
-  name = "astronomer"
-  version = var.astronomer_version
-  chart = "/tmp/astronomer-${var.astronomer_version}-${random_id.collision_avoidance.hex}/helm.astronomer.io"
+  name      = "astronomer"
+  version   = var.astronomer_version
+  chart     = "/tmp/astronomer-${var.astronomer_version}-${random_id.collision_avoidance.hex}/helm.astronomer.io"
   namespace = var.astronomer_namespace
-  wait = true
-  timeout = 900
-  values = [var.astronomer_helm_values]
+  wait      = true
+  timeout   = 900
+  values    = [var.astronomer_helm_values]
 }
 
 /*
