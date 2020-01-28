@@ -1,32 +1,20 @@
+resource "random_id" "collision_avoidance" {
+  byte_length = 8
+}
+
 resource "null_resource" "helm_repo" {
 
   provisioner "local-exec" {
     command = <<EOF
     set -xe
-    git config --global alias.nthlastcheckout '!nthlastcheckout'"() {
-        git reflog |
-        awk '\$3==\"checkout:\" {++n}
-             n=='\$${1-1}' {print \$NF; exit}
-             END {exit n!='\$${1-1}'}'
-        }; nthlastcheckout \"\$@\""
-    cd ${path.root}
-    if [ ! -d ./helm.astronomer.io ]; then
-      git clone https://github.com/astronomer/helm.astronomer.io.git
-    fi
+    export directory=/tmp/astronomer-${var.astronomer_version}-${random_id.collision_avoidance.hex}
+    rm -rf $directory
+    mkdir -p $directory
+    cd $directory
+    git clone https://github.com/astronomer/helm.astronomer.io.git
     if [ ${var.astronomer_version} != "master" ]; then
       cd helm.astronomer.io
       git checkout v${var.astronomer_version}
-      VERSION=$(git nthlastcheckout)
-      if [ $VERSION != v${var.astronomer_version} ]; then
-        cd ..
-        if [ ! -d ./backups ]; then
-          mkdir backups
-        fi
-        mv helm.astronomer.io backups/helm.astronomer.io.$VERSION.${timestamp()}
-        git clone https://github.com/astronomer/helm.astronomer.io.git
-        cd helm.astronomer.io
-        git checkout v${var.astronomer_version}
-      fi
     fi
     EOF
   }
@@ -43,13 +31,13 @@ resource "helm_release" "astronomer_local" {
     kubernetes_secret.astronomer_bootstrap,
   kubernetes_secret.astronomer_tls]
 
-  name      = "astronomer"
-  version   = var.astronomer_version
-  chart     = "./helm.astronomer.io"
+  name = "astronomer"
+  version = var.astronomer_version
+  chart = "/tmp/astronomer-${var.astronomer_version}-${random_id.collision_avoidance.hex}/helm.astronomer.io"
   namespace = var.astronomer_namespace
-  wait      = true
-  timeout   = 900
-  values    = [var.astronomer_helm_values]
+  wait = true
+  timeout = 900
+  values = [var.astronomer_helm_values]
 }
 
 /*
@@ -63,7 +51,7 @@ resource "helm_release" "astronomer" {
   count = var.local_umbrella_chart == "" ? 1 : 0
   name       = "astronomer"
   version    = var.astronomer_version
-  chart      = "helm.astronomer.io"
+  chart      = "/tmp/astronomer-${var.astronomer_version}-${random_id.collision_avoidance.hex}"
   repository = data.helm_repository.astronomer_repo.name
   namespace  = var.astronomer_namespace
   wait       = true
