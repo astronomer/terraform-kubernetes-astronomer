@@ -69,7 +69,7 @@ variable "istio_helm_release_version" {
 }
 
 variable "tiller_version" {
-  default = "2.14.1"
+  default = "2.16.1"
   type    = string
 }
 
