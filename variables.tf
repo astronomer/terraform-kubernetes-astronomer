@@ -47,7 +47,7 @@ variable "dependencies" {
 }
 
 variable "astronomer_helm_values" {
-  type        = "string"
+  type        = string
   description = "Values in raw yaml to pass to helm to override defaults in Astronomer Helm Chart."
   default     = ""
 }
