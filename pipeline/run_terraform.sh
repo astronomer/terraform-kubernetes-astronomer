@@ -19,5 +19,6 @@ cat .terraform/modules/modules.json | python -m json.tool
 if [ $DESTROY -eq 1 ]; then
   terraform destroy --auto-approve -var "deployment_id=$DEPLOYMENT_ID" -refresh=false -lock=false
 else
+  terraform apply --auto-approve -var "deployment_id=$DEPLOYMENT_ID" --target=local_file.kubeconfig
   terraform apply --auto-approve -var "deployment_id=$DEPLOYMENT_ID"
 fi
