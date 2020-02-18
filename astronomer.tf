@@ -12,7 +12,7 @@ resource "null_resource" "helm_repo" {
     rm -rf $directory
     mkdir -p $directory
     cd $directory
-    git clone ${var.astronomer_chart_git_respository}
+    git clone ${var.astronomer_chart_git_repository}
     mv * astronomer
     cd astronomer
     git checkout ${var.astronomer_version_git_checkout}
