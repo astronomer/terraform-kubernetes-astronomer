@@ -40,6 +40,7 @@ global:
   baseDomain: ${module.aws.base_domain}
   tlsSecret: astronomer-tls
   istioEnabled: false
+  postgresqlEnabled: false
 
 nginx:
   loadBalancerIP: "~"
