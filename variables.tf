@@ -13,14 +13,45 @@ variable "tls_key" {
   description = "The private key corresponding to the signed certificate tls_cert."
 }
 
-variable "local_umbrella_chart" {
-  default = ""
-  type    = string
+variable "astronomer_version_git_checkout" {
+  description = "Verison of the helm chart to use, when using git clone method. This should exactly match what you would want to use with 'git checkout <this variable>'. This is ignored if astronomer_chart_git_repository is not configured."
+  default     = "master"
+  type        = string
+}
+
+variable "astronomer_chart_git_repository" {
+  description = "Git repository clone url, when using git clone method. This should exactly match what you would want to use with 'git clone <this variable>'. It is better to not use this and instead use just the astronomer_version variable, which will pull from the Astronomer Helm chart repository."
+  default     = ""
+  type        = string
 }
 
 variable "astronomer_version" {
-  description = "verison of helm chart to use, do not include a 'v' at the front"
-  default     = "0.9.2"
+  description = "Verison of Helm chart to use, do not include a 'v' at the front"
+  default     = "0.12.0-alpha.1"
+  type        = string
+}
+
+variable "astronomer_helm_chart_name" {
+  description = "The name of the Astronomer Helm chart to install from the Astronomer Helm chart repository."
+  default     = "astronomer"
+  type        = string
+}
+
+variable "wait_for_helm_chart" {
+  description = "Should we wait for Astronomer to come up before indicating the apply is complete?"
+  default     = true
+  type        = bool
+}
+
+variable "astronomer_helm_chart_repo" {
+  description = "The name of the Astronomer Helm chart repo"
+  default     = "astronomer"
+  type        = string
+}
+
+variable "astronomer_helm_chart_repo_url" {
+  description = "The url of the Astronomer Helm chart repo"
+  default     = "https://helm.astronomer.io"
   type        = string
 }
 
