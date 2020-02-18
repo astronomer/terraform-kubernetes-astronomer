@@ -3,19 +3,19 @@ resource "random_id" "collision_avoidance" {
 }
 
 resource "null_resource" "helm_repo" {
+  count = var.astronomer_chart_git_repository == "" ? 0 : 1
 
   provisioner "local-exec" {
     command = <<EOF
     set -xe
-    export directory=/tmp/astronomer-${var.astronomer_version}-${random_id.collision_avoidance.hex}
+    export directory=/tmp/astronomer-${var.astronomer_version_git_checkout}-${random_id.collision_avoidance.hex}
     rm -rf $directory
     mkdir -p $directory
     cd $directory
-    git clone https://github.com/astronomer/helm.astronomer.io.git
-    if [ ${var.astronomer_version} != "master" ]; then
-      cd helm.astronomer.io
-      git checkout v${var.astronomer_version}
-    fi
+    git clone ${var.astronomer_chart_git_repository}
+    mv * astronomer
+    cd astronomer
+    git checkout ${var.astronomer_version_git_checkout}
     EOF
   }
 
@@ -24,37 +24,41 @@ resource "null_resource" "helm_repo" {
   }
 }
 
-# this is for development use
-resource "helm_release" "astronomer_local" {
+resource "helm_release" "astronomer_with_git_clone" {
+  count = var.astronomer_chart_git_repository == "" ? 0 : 1
+
   depends_on = [null_resource.helm_repo,
     null_resource.dependency_getter,
     kubernetes_secret.astronomer_bootstrap,
   kubernetes_secret.astronomer_tls]
 
   name      = "astronomer"
-  version   = var.astronomer_version
-  chart     = "/tmp/astronomer-${var.astronomer_version}-${random_id.collision_avoidance.hex}/helm.astronomer.io"
+  chart     = "/tmp/astronomer-${var.astronomer_version_git_checkout}-${random_id.collision_avoidance.hex}/astronomer"
   namespace = var.astronomer_namespace
-  wait      = true
+  wait      = var.wait_for_helm_chart
   timeout   = 900
   values    = [var.astronomer_helm_values]
 }
 
-/*
 data "helm_repository" "astronomer_repo" {
-  name       = var.astronomer_namespace
-  url        = "https://helm.astronomer.io/"
+  url  = var.astronomer_helm_chart_repo_url
+  name = var.astronomer_helm_chart_repo
 }
-
 
 resource "helm_release" "astronomer" {
-  count = var.local_umbrella_chart == "" ? 1 : 0
-  name       = "astronomer"
+  count = var.astronomer_chart_git_repository == "" ? 1 : 0
+
+  depends_on = [null_resource.helm_repo,
+    null_resource.dependency_getter,
+    kubernetes_secret.astronomer_bootstrap,
+  kubernetes_secret.astronomer_tls]
+
   version    = var.astronomer_version
-  chart      = "/tmp/astronomer-${var.astronomer_version}-${random_id.collision_avoidance.hex}"
+  name       = var.astronomer_helm_chart_name
+  chart      = var.astronomer_helm_chart_name
   repository = data.helm_repository.astronomer_repo.name
   namespace  = var.astronomer_namespace
-  wait       = true
-  values = [var.astronomer_helm_values]
+  wait       = var.wait_for_helm_chart
+  timeout    = 900
+  values     = [var.astronomer_helm_values]
 }
-*/
