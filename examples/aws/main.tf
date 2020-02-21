@@ -29,7 +29,6 @@ module "system_components" {
 module "astronomer" {
   dependencies         = [module.system_components.depended_on]
   source               = "../.."
-  astronomer_version   = "0.9.2"
   db_connection_string = module.aws.db_connection_string
   tls_cert             = module.aws.tls_cert
   tls_key              = module.aws.tls_key
@@ -41,12 +40,12 @@ global:
   baseDomain: ${module.aws.base_domain}
   tlsSecret: astronomer-tls
   istioEnabled: false
+  postgresqlEnabled: false
 
 nginx:
   loadBalancerIP: "~"
   privateLoadBalancer: true
   perserveSourceIP: true
-
 EOF
 }
 
