@@ -37,13 +37,13 @@ resource "helm_release" "astronomer_local" {
   wait      = var.wait_for_helm_chart
   timeout   = 900
   values    = [var.astronomer_helm_values]
+  version   = var.astronomer_version
 
   # Use the local chart for github clone method, use
   # chart name for helm repo method.
   chart = var.astronomer_chart_git_repository == "" ? var.astronomer_helm_chart_name : "/tmp/astronomer-${var.astronomer_version_git_checkout}-${random_id.collision_avoidance.hex}/astronomer"
 
   # These settings only are applied when using a Helm chart repo
-  version    = var.astronomer_chart_git_repository == "" ? var.astronomer_version : null
   repository = var.astronomer_chart_git_repository == "" ? data.helm_repository.astronomer_repo.name : null
 }
 
