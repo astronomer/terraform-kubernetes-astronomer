@@ -24,7 +24,7 @@ resource "null_resource" "helm_repo" {
   }
 }
 
-resource "helm_release" "astronomer_with_git_clone" {
+resource "helm_release" "astronomer_local" {
   count = var.astronomer_chart_git_repository == "" ? 0 : 1
 
   depends_on = [null_resource.helm_repo,
@@ -33,32 +33,21 @@ resource "helm_release" "astronomer_with_git_clone" {
   kubernetes_secret.astronomer_tls]
 
   name      = "astronomer"
-  chart     = "/tmp/astronomer-${var.astronomer_version_git_checkout}-${random_id.collision_avoidance.hex}/astronomer"
   namespace = var.astronomer_namespace
   wait      = var.wait_for_helm_chart
   timeout   = 900
   values    = [var.astronomer_helm_values]
+
+  # Use the local chart for github clone method, use
+  # chart name for helm repo method.
+  chart = var.astronomer_chart_git_repository == "" ? var.astronomer_helm_chart_name : "/tmp/astronomer-${var.astronomer_version_git_checkout}-${random_id.collision_avoidance.hex}/astronomer"
+
+  # These settings only are applied when using a Helm chart repo
+  version    = var.astronomer_chart_git_repository == "" ? var.astronomer_version : null
+  repository = var.astronomer_chart_git_repository == "" ? data.helm_repository.astronomer_repo.name : null
 }
 
 data "helm_repository" "astronomer_repo" {
   url  = var.astronomer_helm_chart_repo_url
   name = var.astronomer_helm_chart_repo
-}
-
-resource "helm_release" "astronomer" {
-  count = var.astronomer_chart_git_repository == "" ? 1 : 0
-
-  depends_on = [null_resource.helm_repo,
-    null_resource.dependency_getter,
-    kubernetes_secret.astronomer_bootstrap,
-  kubernetes_secret.astronomer_tls]
-
-  version    = var.astronomer_version
-  name       = var.astronomer_helm_chart_name
-  chart      = var.astronomer_helm_chart_name
-  repository = data.helm_repository.astronomer_repo.name
-  namespace  = var.astronomer_namespace
-  wait       = var.wait_for_helm_chart
-  timeout    = 900
-  values     = [var.astronomer_helm_values]
 }
