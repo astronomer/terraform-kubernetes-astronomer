@@ -13,7 +13,7 @@ resource "null_resource" "helm_repo" {
     mkdir -p $directory
     cd $directory
     git clone ${var.astronomer_chart_git_repository}
-    mv * astronomer
+    mv * astronomer || true
     cd astronomer
     git checkout ${var.astronomer_version_git_checkout}
     EOF
