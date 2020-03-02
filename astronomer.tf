@@ -25,8 +25,6 @@ resource "null_resource" "helm_repo" {
 }
 
 resource "helm_release" "astronomer_local" {
-  count = var.astronomer_chart_git_repository == "" ? 0 : 1
-
   depends_on = [null_resource.helm_repo,
     null_resource.dependency_getter,
     kubernetes_secret.astronomer_bootstrap,
