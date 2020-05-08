@@ -82,3 +82,9 @@ variable "astronomer_helm_values" {
   description = "Values in raw yaml to pass to helm to override defaults in Astronomer Helm Chart."
   default     = ""
 }
+
+variable "install_astronomer_helm_chart" {
+  type        = bool
+  default     = true
+  description = "When false, this module skips installing the Astronomer helm chart. This is useful if you want to manage Astronomer outside of Terraform"
+}
