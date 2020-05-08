@@ -25,6 +25,8 @@ resource "null_resource" "helm_repo" {
 }
 
 resource "helm_release" "astronomer_local" {
+  count = var.install_astronomer_helm_chart ? 1 : 0
+
   depends_on = [null_resource.helm_repo,
     null_resource.dependency_getter,
     kubernetes_secret.astronomer_bootstrap,
