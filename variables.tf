@@ -4,11 +4,13 @@ variable "db_connection_string" {
 }
 
 variable "tls_cert" {
+  default = ""
   type        = string
   description = "The signed certificate for the Astronomer Load Balancer. It should be signed by a certificate authorize and should have common name *.base_domain"
 }
 
 variable "tls_key" {
+  default = ""
   type        = string
   description = "The private key corresponding to the signed certificate tls_cert."
 }
