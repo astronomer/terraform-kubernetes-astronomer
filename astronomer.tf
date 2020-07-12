@@ -44,10 +44,5 @@ resource "helm_release" "astronomer_local" {
   chart = var.astronomer_chart_git_repository == "" ? var.astronomer_helm_chart_name : "/tmp/astronomer-${var.astronomer_version_git_checkout}-${random_id.collision_avoidance.hex}/astronomer"
 
   # These settings only are applied when using a Helm chart repo
-  repository = var.astronomer_chart_git_repository == "" ? data.helm_repository.astronomer_repo.name : null
-}
-
-data "helm_repository" "astronomer_repo" {
-  url  = var.astronomer_helm_chart_repo_url
-  name = var.astronomer_helm_chart_repo
+  repository = var.astronomer_chart_git_repository == "" ? var.astronomer_helm_chart_repo_url : null
 }
