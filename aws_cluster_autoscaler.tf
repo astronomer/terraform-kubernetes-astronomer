@@ -11,7 +11,7 @@ resource "kubernetes_namespace" "cluster_autoscaler" {
 resource "helm_release" "cluster_autoscaler" {
   count      = var.enable_aws_cluster_autoscaler ? 1 : 0
   name       = "cluster-autoscaler"
-  version    = "7.3.2"
+  version    = "7.3.4"
   chart      = "cluster-autoscaler"
   repository = "https://kubernetes-charts.storage.googleapis.com"
   namespace  = kubernetes_namespace.cluster_autoscaler[0].metadata[0].name
