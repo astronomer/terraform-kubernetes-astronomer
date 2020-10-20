@@ -3,9 +3,10 @@
 # https://github.com/hashicorp/terraform/issues/2430
 
 resource "local_file" "kubeconfig" {
-  depends_on = [module.aws]
-  content    = module.aws.kubeconfig
-  filename   = "${path.root}/kubeconfig"
+  depends_on      = [module.aws]
+  content         = module.aws.kubeconfig
+  filename        = "${path.root}/kubeconfig"
+  file_permission = "0644"
 }
 
 provider "kubernetes" {
