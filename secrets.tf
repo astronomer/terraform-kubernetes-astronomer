@@ -33,8 +33,8 @@ resource "kubernetes_secret" "astronomer_tls" {
 }
 
 resource "kubernetes_secret" "astronomer-gcs-keyfile" {
-  count = var.gcp_default_service_account_key != "" ? 1 : 0
-  #count = 0
+  #count = var.gcp_default_service_account_key != "" ? 1 : 0
+  count = 0
   metadata {
     name      = "astronomer-gcs-keyfile"
     namespace = var.astronomer_namespace
