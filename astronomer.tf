@@ -20,7 +20,7 @@ resource "null_resource" "helm_repo" {
   }
 
   triggers = {
-    build_number = "${timestamp()}"
+    build_number = timestamp()
   }
 }
 
