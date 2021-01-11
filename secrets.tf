@@ -16,7 +16,6 @@ resource "kubernetes_secret" "astronomer_bootstrap" {
 
 resource "kubernetes_secret" "astronomer_tls" {
   count      = var.tls_cert != "" && var.tls_key != "" ? 1 : 0
-  #count      = 0
   depends_on = [null_resource.dependency_getter]
 
   metadata {
