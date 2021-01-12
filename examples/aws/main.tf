@@ -5,10 +5,9 @@ variable "route53_domain" {
 }
 
 module "aws" {
-  source         = "astronomer/astronomer-aws/aws"
-  version        = "1.1.101"
+  source         = "github.com/astronomer/terraform-aws-astronomer-aws?ref=2.0.108"
   deployment_id  = var.deployment_id
-  admin_email    = "steven@astronomer.io"
+  admin_email    = "engineering@astronomer.io"
   route53_domain = var.route53_domain
   enable_bastion = false
   tags = {
