@@ -33,6 +33,7 @@ resource "kubernetes_secret" "astronomer_tls" {
 }
 
 resource "kubernetes_secret" "astronomer-gcs-keyfile" {
+  # This logic will be worked out or deleted in a future release. Currently setting to to 1 because that has been required.
   #count = var.gcp_default_service_account_key != "" ? 1 : 0
   count = 1
   metadata {
