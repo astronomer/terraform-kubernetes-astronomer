@@ -12,6 +12,7 @@ cmake-build-*/
 com_crashlytics_export_strings.xml
 crashlytics-build.properties
 crashlytics.properties
+examples/from_scratch/
 fabric.properties
 helm.astronomer.io
 helm.astronomer.io/*

@@ -1,4 +1,5 @@
 #!/bin/bash
+[[ "$OSTYPE" =~ linux ]] || { echo "$0 only runs in Linux. 🐧" ; exit 1 ; }
 set -xe
 
 TERRAFORM="${TERRAFORM:-terraform-0.13}"
