@@ -5,7 +5,7 @@ version: 2.1
 jobs:
   terraform_lint:
     docker:
-      - image: hashicorp/terraform:light
+      - image: hashicorp/terraform:0.12.30
 
     steps:
       - checkout
