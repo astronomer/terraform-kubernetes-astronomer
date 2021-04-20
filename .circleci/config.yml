@@ -1,0 +1,22 @@
+---
+version: 2.1
+
+
+jobs:
+  terraform_lint:
+    docker:
+      - image: hashicorp/terraform:0.12.30
+
+    steps:
+      - checkout
+      - run: terraform init
+      - run: terraform fmt -check=true
+      - run: terraform validate
+      - run: rm -rf .terraform
+      - run: terraform -v
+
+
+workflows:
+  terraform_lint:
+    jobs:
+      - terraform_lint
