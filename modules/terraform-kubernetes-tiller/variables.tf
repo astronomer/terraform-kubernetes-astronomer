@@ -47,7 +47,7 @@ variable "node_selectors" {
 }
 
 variable "enable_tiller" {
-  type    = bool
-  default = true
+  type        = bool
+  default     = true
   description = "Enable tiller if using Helm 2"
 }
