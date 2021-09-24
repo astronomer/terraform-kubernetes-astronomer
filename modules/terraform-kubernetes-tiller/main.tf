@@ -142,7 +142,7 @@ resource "kubernetes_deployment" "this" {
             value = var.tiller_history_max
           }
 
-          image             = "gcr.io/kubernetes-helm/tiller:v${var.tiller_version}"
+          image             = "ghcr.io/helm/tiller:v${var.tiller_version}"
           image_pull_policy = var.tiller_image_pull_policy
 
           liveness_probe {
