@@ -3,5 +3,5 @@ terraform {
 }
 
 provider "helm" {
-  version = "1.3.2"
+  version = "~> 0.10"
 }

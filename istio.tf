@@ -27,6 +27,8 @@ resource "null_resource" "helm_repo" {
     curl -L https://git.io/getLatestIstio | ISTIO_VERSION=${var.istio_helm_release_version} sh -
     rm -rf ./istio || true
     mv ./istio-${var.istio_helm_release_version} istio
+    sed -e 's/extensions\/v1beta1/policy\/v1beta1/g' ./istio/samples/security/psp/all-pods-psp.yaml > istio/install/kubernetes/helm/istio-init/templates/all-pods-psp.yaml
+    sed -e 's/extensions\/v1beta1/policy\/v1beta1/g' ./istio/samples/security/psp/citadel-agent-psp.yaml > istio/install/kubernetes/helm/istio-init/templates/citadel-agent-psp.yaml
     EOF
   }
 
