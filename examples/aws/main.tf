@@ -1,6 +1,6 @@
-variable deployment_id {}
+variable "deployment_id" {}
 
-variable route53_domain {
+variable "route53_domain" {
   default = "astronomer-development.com"
 }
 
@@ -51,7 +51,7 @@ EOF
 
 data "aws_lambda_invocation" "elb_name" {
   depends_on    = [module.astronomer]
-  function_name = "${module.aws.elb_lookup_function_name}"
+  function_name = module.aws.elb_lookup_function_name
   input         = "{}"
 }
 
@@ -64,7 +64,7 @@ data "aws_route53_zone" "selected" {
 }
 
 resource "aws_route53_record" "astronomer" {
-  zone_id = "${data.aws_route53_zone.selected.zone_id}"
+  zone_id = data.aws_route53_zone.selected.zone_id
   name    = "*.${var.deployment_id}.${data.aws_route53_zone.selected.name}"
   type    = "CNAME"
   ttl     = "30"
