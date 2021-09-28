@@ -1,0 +1,14 @@
+version: 2.1
+workflows:
+  init_and_validate:
+    jobs:
+      - run_test
+jobs:
+  run_test:
+    docker:
+      - image: quay.io/astronomer/ci-terraform:2021-08
+    steps:
+      - checkout
+      - run:
+          name: Run
+          command: go test test/init_and_validate_test.go
