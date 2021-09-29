@@ -24,7 +24,7 @@ resource "null_resource" "helm_repo" {
     set -xe
     cd ${path.root}
     rm -rf ./istio-${var.istio_helm_release_version} || true
-    curl -L https://git.io/getLatestIstio | ISTIO_VERSION=${var.istio_helm_release_version} sh -
+    curl -sL https://git.io/getLatestIstio | ISTIO_VERSION=${var.istio_helm_release_version} sh -
     rm -rf ./istio || true
     mv ./istio-${var.istio_helm_release_version} istio
     sed -e 's/extensions\/v1beta1/policy\/v1beta1/g' ./istio/samples/security/psp/all-pods-psp.yaml > istio/install/kubernetes/helm/istio-init/templates/all-pods-psp.yaml
