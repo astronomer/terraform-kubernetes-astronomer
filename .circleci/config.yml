@@ -1,14 +1,20 @@
+---
 version: 2.1
-workflows:
-  init_and_validate:
-    jobs:
-      - run_test
+
 jobs:
-  run_test:
+  terraform_lint:
     docker:
-      - image: quay.io/astronomer/ci-terraform:2021-08
+      - image: hashicorp/terraform:0.12.30
+
     steps:
       - checkout
-      - run:
-          name: Run
-          command: go test test/init_and_validate_test.go
+      - run: terraform init
+      - run: terraform fmt -check=true
+      - run: terraform validate
+      - run: rm -rf .terraform
+      - run: terraform -v
+
+workflows:
+  terraform_lint:
+    jobs:
+      - terraform_lint
