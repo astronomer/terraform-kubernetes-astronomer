@@ -32,10 +32,12 @@ variable "astronomer_version" {
   default     = "0.12.0-alpha.1"
   type        = string
 }
+
 variable "astronomer_chart_git_repository" {
   description = "Git repository clone url, when using git clone method. This should exactly match what you would want to use with 'git clone <this variable>'. It is better to not use this and instead use just the astronomer_version variable, which will pull from the Astronomer Helm chart repository."
   default     = ""
   type        = string
+}
 
 variable "astronomer_helm_chart_name" {
   description = "The name of the Astronomer Helm chart to install from the Astronomer Helm chart repository."
