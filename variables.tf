@@ -29,7 +29,7 @@ variable "astronomer_chart_git_repository" {
 
 variable "astronomer_version" {
   description = "Verison of Helm chart to use, do not include a 'v' at the front"
-  default     = "0.12.0-alpha.1"
+  default     = "0.25.8"
   type        = string
 }
 
