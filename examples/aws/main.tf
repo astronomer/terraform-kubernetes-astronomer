@@ -8,7 +8,7 @@ module "aws" {
   source         = "astronomer/astronomer-aws/aws"
   version        = "1.1.101"
   deployment_id  = var.deployment_id
-  admin_email    = "steven@astronomer.io"
+  admin_email    = "engineering@astronomer.io"
   route53_domain = var.route53_domain
   enable_bastion = false
   tags = {
