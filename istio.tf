@@ -19,6 +19,8 @@ resource "kubernetes_namespace" "istio_config" {
 # https://istio.io/docs/setup/kubernetes/upgrade/steps/
 resource "null_resource" "helm_repo" {
 
+  count = var.enable_istio == "true" ? 1 : 0
+
   provisioner "local-exec" {
     command = <<EOF
     set -xe
