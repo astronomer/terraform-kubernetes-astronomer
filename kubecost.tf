@@ -8,19 +8,19 @@ resource "kubernetes_namespace" "kubecost" {
   }
 }
 
-data "helm_repository" "kubecost" {
-  depends_on = [module.tiller]
-  count      = var.enable_kubecost ? 1 : 0
-  name       = "kubecost"
-  url        = "https://kubecost.github.io/cost-analyzer/"
-}
+#data "helm_repository" "kubecost" {
+#  depends_on = [module.tiller]
+#  count      = var.enable_kubecost ? 1 : 0
+#  name       = "kubecost"
+#  url        = "https://kubecost.github.io/cost-analyzer/"
+#}
 
 resource "helm_release" "kubecost" {
   depends_on = [module.tiller, helm_release.istio]
   count      = var.enable_kubecost ? 1 : 0
   name       = "kubecost"
   version    = var.kubecost_helm_chart_version
-  repository = data.helm_repository.kubecost.0.name
+  repository = "https://kubecost.github.io/cost-analyzer/"
   chart      = "cost-analyzer"
   namespace  = kubernetes_namespace.kubecost.0.metadata.0.name
   wait       = true
