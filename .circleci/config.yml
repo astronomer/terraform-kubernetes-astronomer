@@ -1,20 +1,55 @@
 ---
 version: 2.1
 
-jobs:
-  terraform_lint:
+executors:
+  pre-commit-executor:
     docker:
-      - image: hashicorp/terraform:0.13.7
-
-    steps:
-      - checkout
-      - run: terraform init
-      - run: terraform fmt -check=true
-      - run: terraform validate
-      - run: rm -rf .terraform
-      - run: terraform -v
+      - image: quay.io/astronomer/ci-pre-commit:2022-06
 
 workflows:
-  terraform_lint:
+  pre-commit:
     jobs:
-      - terraform_lint
+      - run_pre_commit
+
+jobs:
+  run_pre_commit:
+    executor: pre-commit-executor
+    steps:
+      - checkout
+      - pre-commit-commands
+
+commands:
+  pre-commit-commands:
+    description: "Execute the pre-commit"
+    steps:
+      - run:
+          name: Create pre-commit-cache-key.txt
+          command: |
+            cp .pre-commit-config.yaml /tmp/pre-commit-cache-key.txt
+            python --version --version | sed 's/^/# /' >> /tmp/pre-commit-cache-key.txt
+      - restore_cache:
+          keys:
+            - pre-commit-cache-{{ checksum "/tmp/pre-commit-cache-key.txt" }}
+      - terraform-install
+      - run:
+          name: Install terraform-docs
+          command: go install github.com/terraform-docs/terraform-docs@v0.16.0
+      - run:
+          name: Install pre-commit hooks
+          command: pre-commit install-hooks
+      - save_cache:
+          key: pre-commit-cache-{{ checksum "/tmp/pre-commit-cache-key.txt" }}
+          paths:
+            - ~/.cache/pre-commit
+      - run:
+          name: Run pre-commit
+          command: |
+            pre-commit run --all-files --show-diff-on-failure
+
+  terraform-install:
+    steps:
+      - run:
+          name: Install terraform
+          command: |
+            tfenv install
+            tfenv use
