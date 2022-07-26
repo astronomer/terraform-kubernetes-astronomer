@@ -14,6 +14,8 @@ workflows:
 jobs:
   run_pre_commit:
     executor: pre-commit-executor
+    environment:
+      TFENV_AUTO_INSTALL: true
     steps:
       - checkout
       - pre-commit-commands
@@ -44,11 +46,3 @@ commands:
           name: Run pre-commit
           command: |
             pre-commit run --all-files --show-diff-on-failure
-
-  terraform-install:
-    steps:
-      - run:
-          name: Install terraform
-          command: |
-            tfenv install
-            tfenv use
