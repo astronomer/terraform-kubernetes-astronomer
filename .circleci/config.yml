@@ -5,6 +5,8 @@ executors:
   pre-commit-executor:
     docker:
       - image: quay.io/astronomer/ci-pre-commit:2022-06
+        environment:
+          TFENV_AUTO_INSTALL: true
 
 workflows:
   pre-commit:
@@ -14,8 +16,6 @@ workflows:
 jobs:
   run_pre_commit:
     executor: pre-commit-executor
-    environment:
-      TFENV_AUTO_INSTALL: true
     steps:
       - checkout
       - pre-commit-commands
