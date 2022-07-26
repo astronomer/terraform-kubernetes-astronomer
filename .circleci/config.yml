@@ -30,7 +30,6 @@ commands:
       - restore_cache:
           keys:
             - pre-commit-cache-{{ checksum "/tmp/pre-commit-cache-key.txt" }}
-      - terraform-install
       - run:
           name: Install terraform-docs
           command: go install github.com/terraform-docs/terraform-docs@v0.16.0
