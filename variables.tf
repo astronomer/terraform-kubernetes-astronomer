@@ -16,7 +16,7 @@ variable "tls_key" {
 }
 
 variable "astronomer_version_git_checkout" {
-  description = "Verison of the helm chart to use, when using git clone method. This should exactly match what you would want to use with 'git checkout <this variable>'. This is ignored if astronomer_chart_git_repository is not configured."
+  description = "Version of the helm chart to use, when using git clone method. This should exactly match what you would want to use with 'git checkout <this variable>'. This is ignored if astronomer_chart_git_repository is not configured."
   default     = "master"
   type        = string
 }
@@ -28,8 +28,8 @@ variable "astronomer_chart_git_repository" {
 }
 
 variable "astronomer_version" {
-  description = "Verison of Helm chart to use, do not include a 'v' at the front"
-  default     = "0.12.0-alpha.1"
+  description = "Version of Helm chart to use, do not include a 'v' at the front"
+  default     = "0.29.2"
   type        = string
 }
 

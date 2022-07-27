@@ -5,6 +5,13 @@ resource "kubernetes_secret" "astronomer_bootstrap" {
   metadata {
     name      = "astronomer-bootstrap"
     namespace = var.astronomer_namespace
+    labels = {
+      "app.kubernetes.io/managed-by" = "Helm"
+    }
+    annotations = {
+      "meta.helm.sh/release-name"      = "astronomer"
+      "meta.helm.sh/release-namespace" = "astronomer"
+    }
   }
 
   type = "kubernetes.io/generic"
@@ -21,6 +28,13 @@ resource "kubernetes_secret" "astronomer_tls" {
   metadata {
     name      = "astronomer-tls"
     namespace = var.astronomer_namespace
+    labels = {
+      "app.kubernetes.io/managed-by" = "Helm"
+    }
+    annotations = {
+      "meta.helm.sh/release-name"      = "astronomer"
+      "meta.helm.sh/release-namespace" = "astronomer"
+    }
   }
 
   type = "kubernetes.io/tls"
@@ -38,6 +52,13 @@ resource "kubernetes_secret" "astronomer-gcs-keyfile" {
   metadata {
     name      = "astronomer-gcs-keyfile"
     namespace = var.astronomer_namespace
+    labels = {
+      "app.kubernetes.io/managed-by" = "Helm"
+    }
+    annotations = {
+      "meta.helm.sh/release-name"      = "astronomer"
+      "meta.helm.sh/release-namespace" = "astronomer"
+    }
   }
 
   type = "kubernetes.io/generic"
