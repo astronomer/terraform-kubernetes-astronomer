@@ -1,8 +1,9 @@
 repos:
   - repo: https://github.com/antonbabenko/pre-commit-terraform
-    rev: v1.74.1
+    rev: v1.76.0
     hooks:
       - id: terraform_fmt
+      - id: terraform_validate
   - repo: https://github.com/codespell-project/codespell
     rev: v2.1.0
     hooks:
@@ -13,7 +14,7 @@ repos:
       - id: prettier
         args: ["--print-width=135"]
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.2.0
+    rev: v4.3.0
     hooks:
       - id: check-case-conflict
       - id: check-executables-have-shebangs
@@ -24,12 +25,14 @@ repos:
       - id: check-xml
       - id: check-yaml
         args: ["--allow-multiple-documents"]
+      - id: debug-statements
       - id: detect-private-key
       - id: end-of-file-fixer
       - id: mixed-line-ending
         args: ["--fix=lf"]
       - id: no-commit-to-branch
         args: ["-b", "master"]
+      - id: requirements-txt-fixer
       - id: sort-simple-yaml
       - id: trailing-whitespace
   - repo: https://github.com/astronomer/pre-commit-hooks
