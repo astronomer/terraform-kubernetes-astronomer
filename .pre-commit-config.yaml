@@ -25,7 +25,6 @@ repos:
       - id: check-xml
       - id: check-yaml
         args: ["--allow-multiple-documents"]
-      - id: debug-statements
       - id: detect-private-key
       - id: end-of-file-fixer
       - id: mixed-line-ending
