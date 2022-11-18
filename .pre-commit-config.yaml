@@ -32,7 +32,6 @@ repos:
         args: ["--fix=lf"]
       - id: no-commit-to-branch
         args: ["-b", "master"]
-      - id: requirements-txt-fixer
       - id: sort-simple-yaml
       - id: trailing-whitespace
   - repo: https://github.com/astronomer/pre-commit-hooks
