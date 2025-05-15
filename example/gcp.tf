@@ -3,7 +3,7 @@ data "http" "local_ip" {
 }
 
 module "astronomer_gcp" {
-  source = "github.com/astronomer/terraform-google-astronomer-gcp//terraform?ref=remove-tiller"
+  source = "github.com/astronomer/terraform-google-astronomer-gcp//terraform?ref=1.4.6"
 
   deployment_id              = var.deployment_id
   dns_managed_zone           = "astrodev"
@@ -18,7 +18,7 @@ module "astronomer_gcp" {
 }
 
 module "system_components" {
-  source = "github.com/astronomer/terraform-kubernetes-astronomer-system-components//terraform?ref=remoev-tiller"
+  source = "github.com/astronomer/terraform-kubernetes-astronomer-system-components//terraform?ref=0.1.35"
 
   astronomer_namespace         = var.astronomer_namespace
   gcp_service_account_key_json = module.astronomer_gcp.gcp_cloud_sql_admin_key

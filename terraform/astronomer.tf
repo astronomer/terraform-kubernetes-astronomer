@@ -44,7 +44,6 @@ resource "helm_release" "astronomer_local" {
   depends_on = [
     null_resource.helm_repo,
     null_resource.dependency_getter,
-    kubernetes_secret.astronomer_bootstrap,
-    kubernetes_secret.astronomer_tls
+    kubernetes_secret.astronomer_bootstrap
   ]
 }

@@ -21,30 +21,6 @@ resource "kubernetes_secret" "astronomer_bootstrap" {
   }
 }
 
-resource "kubernetes_secret" "astronomer_tls" {
-  count      = var.tls_cert != "" && var.tls_key != "" ? 1 : 0
-  depends_on = [null_resource.dependency_getter]
-
-  metadata {
-    name      = "astronomer-tls"
-    namespace = var.astronomer_namespace
-    labels = {
-      "app.kubernetes.io/managed-by" = "Helm"
-    }
-    annotations = {
-      "meta.helm.sh/release-name"      = "astronomer"
-      "meta.helm.sh/release-namespace" = "astronomer"
-    }
-  }
-
-  type = "kubernetes.io/tls"
-
-  data = {
-    "tls.crt" = var.tls_cert
-    "tls.key" = var.tls_key
-  }
-}
-
 resource "kubernetes_secret" "astronomer-gcs-keyfile" {
   # This logic will be worked out or deleted in a future release. Currently setting to to 1 because that has been required.
   #count = var.gcp_default_service_account_key != "" ? 1 : 0
