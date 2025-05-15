@@ -3,7 +3,7 @@ data "http" "local_ip" {
 }
 
 module "astronomer_gcp" {
-  source = "github.com/astronomer/terraform-google-astronomer-gcp//terraform?ref=0.1.35"
+  source = "github.com/astronomer/terraform-google-astronomer-gcp//terraform?ref=1.4.6"
 
   deployment_id              = var.deployment_id
   dns_managed_zone           = "astrodev"
